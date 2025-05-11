@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {# Подключение вашего style.css из папки static/css/ #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>DOPE MUSIC</title> {# Заголовок страницы #}
+</head>
+<body class="page-index">
+    <div class="page">
+
+        {# Шапка сайта #}
+        <header class="container">
+            {# Ссылка на главную страницу с использованием url_for #}
+            <a href="{{ url_for('index') }}" class="logo">
+                {# Путь к изображению логотипа из static/img/ #}
+                <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
+            </a>
+            {# Навигация #}
+            <nav>
+                <ul>
+                    {# Ссылки на другие страницы с использованием url_for #}
+                    <li><a href="{{ url_for('about') }}">О нас</a></li>
+                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
+                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
+                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
+                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        {# Основное содержимое страницы (для главной страницы) #}
+        <main class="container flex-grow-1">
+            <div class="container">
+                <div id="equipmentCarousel" class="carousel slide mt-4" data-bs-ride="carousel" style="height: 500px; margin: 0 auto !important; float: right;">
+                    <div class="carousel-inner" style="width: 500px; height: 500px; overflow: hidden;">
+
+                        <div class="carousel-item active">
+                            {# Путь к изображению карусели из static/img/ #}
+                            <img src="{{ url_for('static', filename='img/8.png') }}" class="d-block w-100 h-100" style="object-fit: cover;" alt="studio">
+                        </div>
+
+                        <div class="carousel-item">
+                            {# Путь к изображению карусели из static/img/ #}
+                            <img src="{{ url_for('static', filename='img/10.png') }}" class="d-block w-100 h-100" style="object-fit: cover;" alt="studio1">
+                        </div>
+
+                        <div class="carousel-item">
+                            {# Путь к изображению карусели из static/img/ #}
+                            <img src="{{ url_for('static', filename='img/9.png') }}" class="d-block w-100 h-100" style="object-fit: cover;" alt="studio2">
+                        </div>
+
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Назад</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Вперёд</span>
+                    </button>
+                </div>
+
+                <h1>Dope Music</h1>
+                <h2>Первая многофункциональная <br> студия звукозаписи в Перми  </h2>
+
+                {# Внешняя ссылка на Telegram (не требует url_for) #}
+                <a class="mainknopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
+            </div>
+        </main>
+
+        {# Подвал сайта #}
+        <footer class="container">
+            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
+            <div class="footer-right">
+                {# Внешняя ссылка на Telegram (не требует url_for) #}
+                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
+                <div class="footer-links">
+                    {# Пути к изображениям соцсетей из static/img/ #}
+                    <a href="https://t.me/dopemusic_records" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
+                    </a>
+                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
+                    </a>
+                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    {# Подключение Bootstrap JS с CDN (не требует url_for) #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
