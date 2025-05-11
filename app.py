@@ -100,9 +100,8 @@ def label():
 # Маршрут для страницы входа
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Если пользователь уже авторизован, перенаправляем его на главную или другую страницу
     if current_user.is_authenticated:
-        return redirect(url_for('index')) # или url_for('media')
+        return redirect(url_for('media'))
 
     if request.method == 'POST':
         # Получаем данные из формы входа
@@ -119,7 +118,7 @@ def login():
             # Перенаправляем пользователя на страницу, которую он пытался посетить до входа,
             # или на главную страницу по умолчанию
             next_page = request.args.get('next')
-            return redirect(next_page or url_for('index'))
+            return redirect(next_page or url_for('media'))
         else:
             # Если имя пользователя или пароль неверны, показываем сообщение
             flash('Неверное имя пользователя или пароль.', 'danger') # 'danger' - класс для стилизации (например, Bootstrap)

@@ -3,57 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <title>Медиа</title>
+    {# Подключение вашего style.css из папки static/css/ #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+     {# Подключение favicon из папки static/ #}
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    {# Заголовок страницы #}
+    <title>Создать запись</title>
 </head>
-<body>
+{# Класс body для страницы создания записи #}
+<body class="page-create">
     <div class="page">
 
+        {# Шапка сайта (повторяется на всех страницах) #}
         <header class="container">
-            <a href="index.html" class="logo">
-                <img src="css/img/Group 81.svg" alt="logo" style="margin-left: -12px">
+            {# Ссылка на главную страницу с использованием url_for #}
+            <a href="{{ url_for('index') }}" class="logo">
+                {# Путь к изображению логотипа из static/img/ #}
+                <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
             </a>
-        <nav>
-            <ul>
-                <li><a href="about.html">О нас</a></li>
-                <li><a href="services.html">Услуги</a></li>
-                <li><a href="contacts.html">Контакты</a></li>
-                <li><a href="media.html">Медиа</a></li>
-                <li><a href="label.html">Лейбл</a></li>
-            </ul>
-        </nav>
+            {# Основная навигация сайта #}
+            <nav>
+                <ul>
+                    {# Ссылки на другие страницы с использованием url_for #}
+                    <li><a href="{{ url_for('about') }}">О нас</a></li>
+                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
+                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
+                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
+                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
+                    {# Ссылки Входа/Выхода/Профиля в зависимости от статуса пользователя #}
+                    {% if current_user.is_authenticated %}
+                        {# Пользователь авторизован #}
+                        {# Опционально: ссылка на профиль пользователя #}
+                        {# <li><a href="{{ url_for('profile') }}">Привет, {{ current_user.username }}</a></li> #}
+                        <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+                    {% else %}
+                        {# Пользователь не авторизован #}
+                        <li><a href="{{ url_for('login') }}">Войти</a></li>
+                        {# Опционально: ссылка на регистрацию #}
+                        {# <li><a href="{{ url_for('register') }}">Регистрация</a></li> #}
+                    {% endif %}
+                </ul>
+            </nav>
         </header>
 
+        {# Место для отображения flash сообщений #}
+        <div class="container mt-3">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {# Основное содержимое страницы "Создать запись" #}
         <main class="container flex-grow-1">
-        <div class="container">
-            <h1>Создание записи</h1>
+            <div class="container">
+                <h1>Добавление записи</h1>
 
-                <form method="post" class="form-control">
-                    <input type="text" name="title" placeholder="Введите заголовок статьи" class="form-control">
-                    <input type="text" name="text" placeholder="Введите текст статьи" class="form-control">
-                    <button class="btn btn--success" type="submit">Добавить</button>
+                {# Форма отправляется на текущий URL ('/create') методом POST #}
+                <form method="post" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05); border: 1px solid #eee;">
+                    <div class="mb-3">
+                        <label for="titleInput" class="form-label" style="color: #fff;">Заголовок</label>
+                        {# value={{ title or '' }} сохранит введенное значение при ошибке #}
+                        <input type="text" name="title" id="titleInput" placeholder="Введите заголовок статьи" class="form-control" value="{{ title or '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="textInput" class="form-label" style="color: #fff;">Текст записи</label>
+                        {# value={{ text or '' }} сохранит введенное значение при ошибке. rows="10" задает высоту #}
+                        <textarea name="text" id="textInput" placeholder="Введите текст записи" class="form-control" rows="10" required>{{ text or '' }}</textarea>
+                    </div>
+
+                    {# Кнопка отправки формы #}
+                    <button class="btn btn-primary" type="submit">Добавить запись</button>
                 </form>
-
+            </div>
         </main>
 
+        {# Подвал сайта (повторяется на всех страницах) #}
         <footer class="container">
             <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
             <div class="footer-right">
+                {# Внешняя ссылка на Telegram (не требует url_for) #}
                 <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
                 <div class="footer-links">
-                    <a href="https://t.me/dopemusic_records" target="_blank">
-                        <img src="css/img/Tg.svg" alt="logo">
+                    {# Пути к изображениям соцсетей из static/img/ #}
+                    <a href="https://t.me/dopemusic_records" target="_blank"> {# Внешняя ссылка #}
+                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
                     </a>
-                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank">
-                        <img src="css/img/Inst.svg" alt="logo">
+                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank"> {# Внешняя ссылка #}
+                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
                     </a>
-                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank">
-                        <img src="css/img/Vk.svg" alt="logo">
+                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank"> {# Внешняя ссылка #}
+                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
                     </a>
                 </div>
             </div>
         </footer>
-    </div>
+
+    </div> {# Закрытие div.page #}
+
+    {# Подключение Bootstrap JS с CDN (не требует url_for) #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {# Если на этой странице есть специфичные скрипты, подключите их здесь с url_for #}
+    {# <script src="{{ url_for('static', filename='js/create_script.js') }}"></script> #}
+
 </body>
 </html>
