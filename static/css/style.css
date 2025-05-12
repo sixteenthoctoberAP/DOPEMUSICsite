@@ -294,6 +294,8 @@ h4{
     /* background-image: none; */
 }
 
+
+
 /* Стили элементов на странице label */
 .page-label nav ul li a {
     text-decoration: none;
@@ -634,46 +636,6 @@ display: block;
     float: right;
 }
 
-
-
-.btn-primary {
-    /* Цвет текста кнопки */
-    --bs-btn-color: #ffffff;
-    /* Цвет фона кнопки (делаем прозрачным, чтобы был виден фон body/page) */
-    --bs-btn-bg: transparent;
-    /* Цвет границы кнопки */
-    --bs-btn-border-color: #ffffff;
-
-    /* Стили при наведении (hover) */
-    --bs-btn-hover-color: #000; /* Цвет текста при наведении (например, черный) */
-    --bs-btn-hover-bg: #ffffff; /* Цвет фона при наведении (например, белый) */
-    --bs-btn-hover-border-color: #ffffff; /* Цвет границы при наведении */
-
-    /* Стили при активности (нажатии) */
-    --bs-btn-active-color: #000; /* Цвет текста при активности */
-    --bs-btn-active-bg: #eee; /* Цвет фона при активности (немного темнее белого) */
-    --bs-btn-active-border-color: #eee; /* Цвет границы при активности */
-
-    /* Стили для отключенной кнопки */
-    --bs-btn-disabled-color: rgba(255, 255, 255, 0.6); /* Цвет текста (полупрозрачный) */
-    --bs-btn-disabled-bg: transparent; /* Фон прозрачный */
-    --bs-btn-disabled-border-color: rgba(255, 255, 255, 0.6); /* Граница (полупрозрачная) */
-
-    /* Цвет тени при фокусе (например, по цвету границы) */
-    --bs-btn-focus-shadow-rgb: 255, 255, 255; /* RGB белого цвета */
-
-    border-width: 3px;
-    text-decoration: none;
-    border-radius: 0px;
-}
-
-/* Убедимся, что цвет текста применяется корректно при наведении/фокусе */
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active {
-     color: var(--bs-btn-hover-color);
-}
-
 .post-image{
     width: 760px;
     height: 760px; /* Возможно, стоит использовать max-height вместо фиксированной height */
@@ -693,3 +655,66 @@ display: block;
 .posts-list small{
     font-size: 12.8px;
 }
+
+
+/* --- Стили для кнопок редактирования и удаления поста --- */
+.post-actions .btn {
+
+}
+
+/* Если нужно применить только к конкретным кнопкам, можно использовать более специфичные селекторы: */
+/*
+.post-actions .btn-secondary {
+    border-radius: 0px !important;
+}
+
+.post-actions .btn-danger {
+    border-radius: 0px !important;
+}
+*/
+
+/* Возможно, стоит добавить небольшие отступы между кнопками, если они не заданы классом me-2 */
+/*
+.post-actions .btn {
+    margin-right: 5px;
+}
+.post-actions .btn:last-child {
+    margin-right: 0;
+}
+*/
+
+
+/* Стили для ссылки "Создать запись" */
+.on-page {
+    color: #fff; /* Цвет текста */
+    background-color: #007bff; /* Пример фонового цвета (как у btn-primary) */
+    border: 1px solid #007bff; /* Пример границы */
+    border-radius: 8px; /* Пример скругления углов (можно убрать, если нужны прямые) */
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease; /* Плавный переход для анимации */
+}
+
+/* Анимация при наведении (hover) */
+.on-page:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+    border-color: #004085; /* Темнее граница */
+    color: #fff; /* Цвет текста остается белым */
+}
+
+/* Анимация при активном состоянии (нажатии) */
+.on-page:active {
+    background-color: #004085; /* Еще темнее при нажатии */
+    border-color: #002752; /* Еще темнее граница */
+    transform: translateY(1px); /* Сдвиг вниз на 1px для эффекта нажатия */
+}
+
+.page-label .on-page{
+    color:#135BC0 ;
+    background-color: #cadaf1;
+}
+
+/* Анимация при наведении (hover) */
+.page-label .on-page:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Темнее при наведении */
+    color: #135BC0; /* Цвет текста остается белым */
+}
+
