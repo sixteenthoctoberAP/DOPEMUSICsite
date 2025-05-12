@@ -1,26 +1,16 @@
-{# create.html #}
-{# Указываем, что этот шаблон наследует от base.html #}
 {% extends 'base.html' %}
 
-{# Переопределяем блок title для заголовка страницы #}
 {% block title %}Создать запись{% endblock %}
 
-{# Переопределяем блок body_class для специфичных стилей страницы #}
 {% block body_class %}page-create{% endblock %}
 
-
-{# --- Переопределяем блок content для основного содержимого страницы --- #}
 {% block content %}
-    {# Уникальное содержимое страницы "Создать запись" начинается здесь.
-       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
-       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом create.html.
-    #}
 
     <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
         <h1>Добавление записи</h1>
 
         {# --- Форма создания поста --- #}
-        {# Важно: добавьте enctype="multipart/form-data" для загрузки файлов #}
+
         <form method="post" enctype="multipart/form-data" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05);border-radius: 0; border: 3px solid #eee;">
             <div class="mb-3">
                 <label for="titleInput" class="form-label" style="color: #fff;">Заголовок</label>
@@ -44,11 +34,5 @@
          {# --- Конец формы --- #}
     </div> {# Закрытие div.container #}
 
-
 {% endblock %}
-{# --- Конец блока content --- #}
 
-{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
-{# {% block extra_scripts %}
-    <script src="{{ url_for('static', filename='js/create_script.js') }}"></script>
-{% endblock %} #}

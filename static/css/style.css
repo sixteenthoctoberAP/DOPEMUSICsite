@@ -69,15 +69,21 @@ nav ul {
     height: 48px;
     line-height: 48px; /* Выравниваем текст по вертикали */
 }
+nav {
+    font-size: 25px;
+    font-weight: 300;
+}
 
 nav ul li {
     padding: 0;
     margin: 0;
+    font-size: 25px;
 }
 
 nav ul li a {
     text-decoration: none;
     color: #ffffff;
+
 }
 
 /* FOOTER */
@@ -136,7 +142,16 @@ footer {
     z-index: 1;
 }
 
+.page-create h1{
+    padding-top: 0px;
+    margin-bottom: 16px;
+}
+.page-edit h1{
+    padding-top: 0px;
+    margin-bottom: 16px;
+}
 
+.page .form-control
 /* NAVBAR */
 
 nav{
@@ -619,4 +634,5 @@ display: block;
     background-color: rgba(255, 255, 255, 0.1); /* Темнее при наведении */
     color: #135BC0; /* Цвет текста остается белым */
 }
+
 
