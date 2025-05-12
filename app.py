@@ -2,234 +2,281 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import os # Добавляем импорт os для получения SECRET_KEY
+import os # Импорт для работы с файловой системой
+from werkzeug.utils import secure_filename # Импорт для безопасного получения имени файла
+import uuid # Импорт для генерации уникальных идентификаторов
+from datetime import datetime # Импорт для работы с датой и временем
 
+# Создание экземпляра приложения Flask
 app = Flask(__name__)
 
 # --- Конфигурация приложения ---
-# Используем SQLite базу данных, она будет создана в корне проекта
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dope_music.db' # Изменил имя файла БД
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Рекомендуется отключить для производительности
-# !!! ОЧЕНЬ ВАЖНО: Установите надежный случайный секретный ключ!
-# Можно сгенерировать, например, в Python: import os; os.urandom(24).hex()
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'ВАШ_ОЧЕНЬ_НАДЕЖНЫЙ_И_СЛУЧАЙНЫЙ_СЕКРЕТНЫЙ_КЛЮЧ' # <-- Замените это!
+# Настройка URI базы данных SQLAlchemy (используем SQLite)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dope_music.db'
+# Отключение отслеживания изменений объектов SQLAlchemy (рекомендуется для производительности)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Установка секретного ключа для безопасности сессий и flash-сообщений.
+# Получаем из переменной окружения или используем заглушку (ОЧЕНЬ ВАЖНО ЗАМЕНИТЬ НА НАДЕЖНЫЙ КЛЮЧ!)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'ВАШ_ОЧЕНЬ_НАДЕЖНЫЙ_И_СЛУЧАЙНЫЙ_СЕКРЕТНЫЙ_КЛЮЧ'
 
+# --- Конфигурация для загрузки файлов ---
+# Папка, куда будут сохраняться загруженные изображения. Находится внутри папки 'static'.
+UPLOAD_FOLDER = 'static/post_images'
+# Разрешенные расширения файлов изображений
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+# Добавление папки загрузки в конфигурацию приложения
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# Проверка и создание папки для загрузки при запуске приложения, если ее нет
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# Инициализация расширения SQLAlchemy, связывая его с приложением Flask
 db = SQLAlchemy(app)
 
+# Инициализация расширения Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login' # Указываем имя функции маршрута для входа
-login_manager.login_message = 'Для доступа к этой странице необходимо авторизоваться.' # Сообщение при перенаправлении
-login_manager.login_message_category = 'info' # Класс для сообщения (для Bootstrap)
+# Установка имени функции маршрута для страницы входа (Flask-Login будет перенаправлять сюда неавторизованных пользователей)
+login_manager.login_view = 'login'
+# Сообщение, которое будет показано при перенаправлении на страницу входа
+login_manager.login_message = 'Для доступа к этой странице необходимо авторизоваться.'
+# Категория сообщения (используется Bootstrap для стилизации alert)
+login_manager.login_message_category = 'info'
+
+
+# --- Вспомогательная функция для проверки расширения файла ---
+def allowed_file(filename):
+    # Проверяет, есть ли точка в имени файла и является ли часть после последней точки
+    # одним из разрешенных расширений (в нижнем регистре).
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 # --- Модель пользователя ---
-# Описывает структуру таблицы 'user' в базе данных
+# Определяет структуру таблицы 'user' в базе данных. Наследуется от UserMixin для интеграции с Flask-Login.
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True) # Уникальный ID пользователя
-    username = db.Column(db.String(100), unique=True, nullable=False) # Логин пользователя (уникальный, обязательный)
-    password_hash = db.Column(db.String(200), nullable=False) # Хеш пароля (обязательный)
+    id = db.Column(db.Integer, primary_key=True) # Первичный ключ, автоинкремент
+    username = db.Column(db.String(100), unique=True, nullable=False) # Имя пользователя, уникальное, обязательное
+    password_hash = db.Column(db.String(200), nullable=False) # Хеш пароля, обязательное
 
-    # Метод для установки хешированного пароля
+    # Метод для хеширования и установки пароля
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
-    # Метод для проверки пароля
+    # Метод для проверки введенного пароля с хешем из БД
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    # Метод для удобного отображения объекта пользователя (для отладки)
+    # Метод для удобного представления объекта пользователя (для отладки)
     def __repr__(self):
         return f'<User {self.username}>'
 
 # --- Модель поста ---
-# Описывает структуру таблицы 'post' в базе данных
+# Определяет структуру таблицы 'post' в базе данных.
 class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True) # Уникальный ID поста
-    title = db.Column(db.String(100), nullable=False) # Заголовок поста (обязательный)
-    text = db.Column(db.Text, nullable=False) # Текст поста (обязательный, тип Text для длинного текста)
-    # Опционально: добавляем связь с пользователем, который создал пост
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # author = db.relationship('User', backref=db.backref('posts', lazy=True)) # Создает атрибут 'author' у поста и 'posts' у пользователя
+    id = db.Column(db.Integer, primary_key=True) # Первичный ключ, автоинкремент
+    title = db.Column(db.String(100), nullable=False) # Заголовок поста, обязательное
+    text = db.Column(db.Text, nullable=False) # Текст поста, обязательное (тип Text для длинного текста)
+    # Поле для хранения имени файла изображения. Может быть NULL, так как изображение необязательно.
+    image_filename = db.Column(db.String(100), nullable=True)
+    # Поле для даты и времени создания поста. Устанавливается автоматически при создании записи.
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    # Опционально: user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # Опционально: author = db.relationship('User', backref=db.backref('posts', lazy=True))
 
-    # Метод для удобного отображения объекта поста (для отладки)
+
+    # Метод для удобного представления объекта поста (для отладки)
     def __repr__(self):
         return f'<Post {self.title}>'
 
 
 # --- Функция загрузки пользователя для Flask-Login ---
-# Эта функция вызывается Flask-Login при каждом запросе для получения пользователя по его ID из сессии
+# Эта функция необходима Flask-Login для загрузки пользователя из сессии по его ID.
 @login_manager.user_loader
 def load_user(user_id):
-    # user_id здесь - это строка, Flask-Login сам передает его как строку
-    return User.query.get(int(user_id)) # Ищем пользователя в базе по ID
+    # Возвращает объект пользователя или None, если пользователь не найден.
+    return User.query.get(int(user_id))
 
 # --- Ваши существующие маршруты ---
 
+# Маршрут для главной страницы
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Маршрут для страницы "О нас"
 @app.route('/about')
 def about():
     return render_template('about.html')
 
+# Маршрут для страницы "Услуги"
 @app.route('/services')
 def services():
     return render_template('services.html')
 
+# Маршрут для страницы "Контакты"
 @app.route('/contacts')
 def contacts():
     return render_template('contacts.html')
 
-# *** Изменяем маршрут /media, чтобы он получал все посты ***
+# --- Маршрут для страницы "Медиа" (отображение постов) ---
 @app.route('/media')
 def media():
-    # Получаем все посты из базы данных, отсортированные по ID в обратном порядке (новые сверху)
-    all_posts = Post.query.order_by(Post.id.desc()).all()
-    # Передаем посты в шаблон media.html под именем 'posts'
+    # Получаем все посты из базы данных, сортируя их по дате создания в убывающем порядке.
+    all_posts = Post.query.order_by(Post.created_at.desc()).all()
+    # Передаем список постов в шаблон media.html
     return render_template('media.html', posts=all_posts)
 
+# Маршрут для страницы "Лейбл"
 @app.route('/label')
 def label():
     return render_template('label.html')
 
 
-# --- Новые маршруты для аутентификации ---
+# --- Маршруты для аутентификации ---
 
 # Маршрут для страницы входа
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Если пользователь уже авторизован, перенаправляем его на страницу медиа.
     if current_user.is_authenticated:
         return redirect(url_for('media'))
 
+    # Обработка отправки формы входа (POST запрос)
     if request.method == 'POST':
-        # Получаем данные из формы входа
-        username = request.form.get('username') # Используем .get() для безопасного доступа
-        password = request.form.get('password')
+        username = request.form.get('username') # Получаем имя пользователя из формы
+        password = request.form.get('password') # Получаем пароль из формы
 
-        # Ищем пользователя в базе по имени
+        # Ищем пользователя в базе данных по имени пользователя
         user = User.query.filter_by(username=username).first()
 
-        # Проверяем, найден ли пользователь и правильный ли пароль
+        # Проверяем, найден ли пользователь и совпадает ли пароль
         if user and user.check_password(password):
-            # Если все верно, авторизуем пользователя с помощью Flask-Login
-            login_user(user) # Можно добавить remember=True для "запомнить меня"
-            # Перенаправляем пользователя на страницу, которую он пытался посетить до входа,
-            # или на главную страницу по умолчанию
+            login_user(user) # Авторизуем пользователя с помощью Flask-Login
+            # Перенаправляем на страницу, которую пользователь пытался посетить до входа,
+            # или на страницу медиа по умолчанию.
             next_page = request.args.get('next')
             return redirect(next_page or url_for('media'))
         else:
-            # Если имя пользователя или пароль неверны, показываем сообщение
-            flash('Неверное имя пользователя или пароль.', 'danger') # 'danger' - класс для стилизации (например, Bootstrap)
-            # Возвращаем форму входа, можно передать введенный логин для удобства
+            # Если логин или пароль неверны, показываем flash-сообщение об ошибке.
+            flash('Неверное имя пользователя или пароль.', 'danger')
+            # Повторно отображаем шаблон входа, сохраняя введенное имя пользователя.
             return render_template('login.html', username=username)
 
-    # Если метод запроса GET, просто показываем форму входа
-    return render_template('login.html') # Вам нужно создать этот файл шаблона
+    # Обработка GET запроса (просто отображение страницы входа)
+    return render_template('login.html')
 
 
-# Маршрут для выхода
+# Маршрут для выхода пользователя
 @app.route('/logout')
-@login_required # Этот декоратор требует, чтобы пользователь был авторизован для доступа к этому маршруту
+# Декоратор @login_required требует, чтобы пользователь был авторизован для доступа к этому маршруту.
+@login_required
 def logout():
-    # Выходим из системы с помощью Flask-Login
-    logout_user()
-    # Показываем сообщение о выходе
-    flash('Вы вышли из системы.', 'info') # 'info' - класс для стилизации (например, Bootstrap)
-    # Перенаправляем на главную страницу (или страницу входа)
-    return redirect(url_for('index'))
+    logout_user() # Выходим из системы с помощью Flask-Login
+    flash('Вы вышли из системы.', 'info') # Показываем flash-сообщение о выходе
+    return redirect(url_for('index')) # Перенаправляем на главную страницу
 
 
-# Маршрут для создания поста (ТЕПЕРЬ ЗАЩИЩЕН)
+# --- Маршрут для создания поста (с обработкой загрузки файла) ---
 @app.route('/create', methods=['GET', 'POST'])
-@login_required # Этот декоратор требует, чтобы пользователь был авторизован для доступа к этому маршруту
+# Декоратор @login_required требует, чтобы пользователь был авторизован для доступа к этому маршруту.
+@login_required
 def create():
-    # Если метод запроса POST (форма отправлена)
+    # Обработка отправки формы создания поста (POST запрос)
     if request.method == 'POST':
-        # Получаем данные из формы
-        title = request.form.get('title')
-        text = request.form.get('text')
+        title = request.form.get('title') # Получаем заголовок из формы
+        text = request.form.get('text') # Получаем текст из формы
+        image = request.files.get('image') # Получаем загруженный файл изображения из формы
 
-        # Простая валидация
+        image_filename = None # Инициализируем имя файла изображения как None
+
+        # Проверяем, был ли файл загружен и имеет ли он имя (т.е. пользователь выбрал файл)
+        if image and image.filename:
+            # Проверяем, разрешено ли расширение файла
+            if allowed_file(image.filename):
+                # Генерируем безопасное имя файла, очищая его от потенциально опасных символов.
+                original_filename = secure_filename(image.filename)
+                # Генерируем уникальное имя файла, чтобы избежать конфликтов при загрузке файлов с одинаковыми именами.
+                unique_filename = str(uuid.uuid4()) + '_' + original_filename
+                # Формируем полный путь для сохранения файла.
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+
+                try:
+                    image.save(filepath) # Сохраняем файл на сервере
+                    image_filename = unique_filename # Сохраняем уникальное имя файла для записи в базу данных.
+                except Exception as e:
+                    # Если произошла ошибка при сохранении файла, показываем flash-сообщение.
+                    flash(f'Ошибка при сохранении файла изображения: {e}', 'danger')
+                    # Убеждаемся, что image_filename остается None, если сохранение не удалось.
+                    image_filename = None
+
+            else:
+                # Если расширение файла не разрешено, показываем flash-сообщение.
+                flash('Недопустимый формат файла изображения! Разрешены только PNG, JPG, JPEG, GIF.', 'warning')
+                # image_filename остается None, пост будет создан без изображения.
+                image_filename = None
+
+        # Простая валидация: проверяем, что заголовок и текст не пустые.
         if not title or not text:
-            flash('Заголовок и текст записи не могут быть пустыми!', 'warning') # 'warning' - класс для стилизации
-            # Возвращаем форму с уже введенными данными
+            flash('Заголовок и текст записи не могут быть пустыми!', 'warning')
+            # Повторно отображаем шаблон создания поста, сохраняя введенные данные.
             return render_template('create.html', title=title, text=text)
 
-        # Создаем новый объект Post
-        # Если добавили user_id: post = Post(title=title, text=text, author=current_user)
-        post = Post(title=title, text=text)
+
+        # Создаем новый объект Post.
+        # Поле created_at установится автоматически благодаря default=datetime.utcnow.
+        # Поле image_filename будет либо уникальным именем файла, либо None.
+        post = Post(title=title, text=text, image_filename=image_filename)
+        # Если добавили user_id: post = Post(title=title, text=text, image_filename=image_filename, author=current_user)
+
 
         try:
-            # Добавляем пост в сессию базы данных и сохраняем изменения
+            # Добавляем новый пост в сессию базы данных.
             db.session.add(post)
+            # Сохраняем изменения в базе данных.
             db.session.commit()
-            # Показываем сообщение об успехе
-            flash('Запись успешно создана!', 'success') # 'success' - класс для стилизации
-            # Перенаправляем на страницу, где отображаются посты (например, /media)
-            return redirect(url_for('media')) # Использовать 'media', т.к. посты показываются там
+            # Показываем flash-сообщение об успешном создании поста.
+            flash('Запись успешно создана!', 'success')
+            # Перенаправляем пользователя на страницу медиа.
+            return redirect(url_for('media'))
 
         except Exception as e:
-            # Если произошла ошибка при сохранении в БД
-            db.session.rollback() # Откатываем изменения
-            flash(f'При создании записи произошла ошибка: {e}', 'danger') # Показываем сообщение об ошибке
-            # Возвращаем форму с введенными данными
-            return render_template('create.html', title=title, text=text) # Возвращаем форму с данными
+            # Если произошла ошибка при сохранении в базу данных, откатываем изменения.
+            db.session.rollback()
+            # Показываем flash-сообщение об ошибке сохранения в БД.
+            flash(f'При сохранении записи в базу данных произошла ошибка: {e}', 'danger')
+            # Повторно отображаем шаблон создания поста, сохраняя введенные данные.
+            return render_template('create.html', title=title, text=text)
 
-    # Если метод запроса GET (просто открываем страницу)
+    # Обработка GET запроса (просто отображение страницы создания поста)
     else:
-        # Показываем пустую форму создания поста
-        return render_template('create.html') # Вам нужно создать этот файл шаблона
+        return render_template('create.html')
 
 
 # --- Маршрут для регистрации (опционально) ---
-# Если вы хотите дать пользователям возможность самостоятельно регистрироваться.
-# Если нет, вы можете создавать пользователей вручную через Python консоль.
+# Этот маршрут закомментирован, так как вы планируете создавать пользователей вручную.
+# Если решите добавить регистрацию, раскомментируйте и реализуйте логику.
 # @app.route('/register', methods=['GET', 'POST'])
 # def register():
-#     if current_user.is_authenticated:
-#         return redirect(url_for('index')) # Если пользователь уже вошел, перенаправляем
-
-#     if request.method == 'POST':
-#         username = request.form.get('username')
-#         password = request.form.get('password')
-
-#         user = User.query.filter_by(username=username).first() # Проверяем, нет ли пользователя с таким именем
-
-#         if user:
-#             flash('Пользователь с таким именем уже существует.', 'warning')
-#             return render_template('register.html', username=username)
-
-#         # Создаем нового пользователя
-#         new_user = User(username=username)
-#         new_user.set_password(password) # Устанавливаем хешированный пароль
-
-#         try:
-#             db.session.add(new_user)
-#             db.session.commit()
-#             flash('Регистрация успешна! Теперь вы можете войти.', 'success')
-#             return redirect(url_for('login')) # Перенаправляем на страницу входа
-#         except Exception as e:
-#             db.session.rollback()
-#             flash(f'Произошла ошибка при регистрации: {e}', 'danger')
-#             return render_template('register.html', username=username)
-
-#     return render_template('register.html') # Вам нужно создать этот файл шаблона
+#     # ... (логика регистрации) ...
+#     pass
 
 
 # --- Запуск приложения ---
 if __name__ == '__main__':
-    # !!! ВАЖНО: Перед первым запуском приложения или после ЛЮБЫХ изменений в моделях (User, Post и др.)
-    # необходимо создать или обновить структуры таблиц в базе данных.
-    # Выполните следующие команды в Python консоли (активировав виртуальное окружение .venv):
+    # !!! ВАЖНО: После добавления или изменения полей в моделях (User, Post и др.),
+    # необходимо обновить структуру таблиц в базе данных.
+    # Если вы не используете Flask-Migrate, самый простой способ для этапа разработки -
+    # удалить существующий файл базы данных (dope_music.db)
+    # и заново выполнить db.create_all() в Python консоли из активированного виртуального окружения:
     # from app import app, db
     # with app.app_context():
-    #     db.create_all() # Создаст таблицы User и Post в файле dope_music.db
-    #     # После первого создания базы, если вы захотите добавить пользователя вручную:
-    #     # admin = User(username='admin') # Создаем объект пользователя
-    #     # admin.set_password('ваш_безопасный_пароль') # Устанавливаем пароль (замените 'ваш_безопасный_пароль')
-    #     # db.session.add(admin) # Добавляем пользователя в сессию
-    #     # db.session.commit() # Сохраняем изменения в базе
+    #     db.create_all() # Создаст или обновит таблицы, включая новые поля
+    #     # Не забудьте при необходимости заново создать пользователя(ей) вручную
+    #     # после удаления старой базы данных!
 
-    app.run(debug=True, port=5001) # Запускаем приложение в режиме отладки
+    # Запуск Flask-приложения в режиме отладки на порту 5001.
+    # debug=True позволяет видеть подробные ошибки в браузере и автоматически перезагружать сервер при изменениях кода.
+    # port=5001 указывает, на каком порту запустить сервер.
+    app.run(debug=True, port=5001)

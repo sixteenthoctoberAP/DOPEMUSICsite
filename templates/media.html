@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="[https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css](https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css)" rel="stylesheet">
     {# Подключение вашего style.css из папки static/css/ #}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {# Подключение favicon из папки static/ #}
+    {# Подключение favicon из папки static/ ##}
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     {# Заголовок страницы #}
     <title>Медиа</title>
@@ -81,13 +81,31 @@
 
                 {# --- Список постов из базы данных --- #}
                 <div class="posts-list mt-5"> {# Добавим отступ сверху #}
-                    <h2>Наши записи</h2>
+                    <h2>Наши записи</h2> {# Заголовок для списка постов #}
 
                     {% if posts %} {# Проверяем, есть ли посты для отображения #}
                         {% for post in posts %}
                             <div class="post-item mt-4" style="border: 3px solid #eee; padding: 20px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.05);"> {# Пример стилизации блока поста #}
                                 <h3>{{ post.title }}</h3> {# Заголовок поста #}
+
+                                {# --- Отображаем изображение, если оно есть --- #}
+                                {% if post.image_filename %} {# Проверяем, сохранено ли имя файла изображения для этого поста #}
+                                    {# Генерируем URL к изображению, используя url_for('static', ...) #}
+                                    {# Путь будет: static/post_images/имя_файла_изображения #}
+                                    <img src="{{ url_for('static', filename='post_images/' + post.image_filename) }}" alt="Изображение к посту" style="max-width: 100%; height: auto; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;"> {# Добавил минимальные стили #}
+                                {% endif %}
+                                {# --- Конец отображения изображения --- #}
+
                                 <p>{{ post.text }}</p> {# Текст поста #}
+
+                                {# --- Отображаем дату и время создания --- #}
+                                {# Используем фильтр strftime для форматирования даты и времени #}
+                                {# Пример формата: %Y-%m-%d %H:%M (Год-Месяц-День Час:Минута) #}
+                                <small style="color: #ccc; opacity: 0.7;">
+                                    Опубликовано: {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                </small>
+                                {# --- Конец отображения даты --- #}
+
                                 {# Если добавили автора: <small>Опубликовано: {{ post.author.username }}</small> #}
                             </div>
                         {% endfor %}
@@ -104,17 +122,15 @@
         <footer class="container">
             <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
             <div class="footer-right">
-                {# Внешняя ссылка на Telegram (не требует url_for) #}
-                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
+                <a class="knopka" href="[https://t.me/dopemusic_perm](https://t.me/dopemusic_perm)" target="_blank">Забронировать время</a>
                 <div class="footer-links">
-                    {# Пути к изображениям соцсетей из static/img/ #}
-                    <a href="https://t.me/dopemusic_records" target="_blank"> {# Внешняя ссылка #}
+                    <a href="[https://t.me/dopemusic_records](https://t.me/dopemusic_records)" target="_blank">
                         <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
                     </a>
-                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank"> {# Внешняя ссылка #}
+                    <a href="[https://www.instagram.com/dopemusic.perm/](https://www.instagram.com/dopemusic.perm/)" target="_blank">
                         <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
                     </a>
-                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank"> {# Внешняя ссылка #}
+                    <a href="[https://vk.com/dopemusicrecords?from=groups](https://vk.com/dopemusicrecords?from=groups)" target="_blank">
                         <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
                     </a>
                 </div>
@@ -124,7 +140,7 @@
     </div> {# Закрытие div.page #}
 
     {# Подключение Bootstrap JS с CDN (не требует url_for) #}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="[https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js](https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js)"></script>
     {# Если на этой странице есть специфичные скрипты, подключите их здесь с url_for #}
     {# <script src="{{ url_for('static', filename='js/media_script.js') }}"></script> #}
 

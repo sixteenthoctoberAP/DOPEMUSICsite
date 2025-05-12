@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="[https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css](https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css)" rel="stylesheet">
     {# Подключение вашего style.css из папки static/css/ #}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
      {# Подключение favicon из папки static/ #}
@@ -67,8 +67,9 @@
             <div class="container">
                 <h1>Добавление записи</h1>
 
-                {# Форма отправляется на текущий URL ('/create') методом POST #}
-                <form method="post" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05);border-radius: 0; border: 3px solid #eee;">
+                {# --- Форма создания поста --- #}
+                {# Важно: добавьте enctype="multipart/form-data" для загрузки файлов #}
+                <form method="post" enctype="multipart/form-data" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05);border-radius: 0; border: 3px solid #eee;">
                     <div class="mb-3">
                         <label for="titleInput" class="form-label" style="color: #fff;">Заголовок</label>
                         {# value={{ title or '' }} сохранит введенное значение при ошибке #}
@@ -76,13 +77,19 @@
                     </div>
                     <div class="mb-3">
                         <label for="textInput" class="form-label" style="color: #fff;">Текст записи</label>
-                        {# value={{ text or '' }} сохранит введенное значение при ошибке. rows="10" задает высоту #}
                         <textarea name="text" id="textInput" placeholder="Введите текст записи" class="form-control" rows="10" required>{{ text or '' }}</textarea>
                     </div>
 
-                    {# Кнопка отправки формы #}
+                    {# --- Поле для загрузки файла изображения (необязательно) --- #}
+                    <div class="mb-3">
+                        <label for="imageInput" class="form-label" style="color: #fff;">Изображение (необязательно)</label>
+                        <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
+                    </div>
+                    {# --- Конец поля --- #}
+
                     <button class="btn btn-primary" type="submit">Добавить запись</button>
                 </form>
+                 {# --- Конец формы --- #}
             </div>
         </main>
 
@@ -90,27 +97,24 @@
         <footer class="container">
             <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
             <div class="footer-right">
-                {# Внешняя ссылка на Telegram (не требует url_for) #}
-                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
+                <a class="knopka" href="[https://t.me/dopemusic_perm](https://t.me/dopemusic_perm)" target="_blank">Забронировать время</a>
                 <div class="footer-links">
-                    {# Пути к изображениям соцсетей из static/img/ #}
-                    <a href="https://t.me/dopemusic_records" target="_blank"> {# Внешняя ссылка #}
+                    <a href="[https://t.me/dopemusic_records](https://t.me/dopemusic_records)" target="_blank">
                         <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
                     </a>
-                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank"> {# Внешняя ссылка #}
+                    <a href="[https://www.instagram.com/dopemusic.perm/](https://www.instagram.com/dopemusic.perm/)" target="_blank">
                         <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
                     </a>
-                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank"> {# Внешняя ссылка #}
+                    <a href="[https://vk.com/dopemusicrecords?from=groups](https://vk.com/dopemusicrecords?from=groups)" target="_blank">
                         <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
                     </a>
                 </div>
             </div>
         </footer>
 
-    </div> {# Закрытие div.page #}
-
+    </div>
     {# Подключение Bootstrap JS с CDN (не требует url_for) #}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="[https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js](https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js)"></script>
     {# Если на этой странице есть специфичные скрипты, подключите их здесь с url_for #}
     {# <script src="{{ url_for('static', filename='js/create_script.js') }}"></script> #}
 
