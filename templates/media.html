@@ -1,162 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {# Подключение Bootstrap CSS с CDN #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {# Подключение вашего style.css из папки static/css/ #}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {# Подключение favicon из папки static/ #}
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    {# Заголовок страницы #}
-    <title>Медиа</title>
-</head>
-{# Класс body для страницы медиа #}
-<body class="page-media">
-    <div class="page">
+{# media.html #}
+{# Указываем, что этот шаблон наследует от base.html #}
+{% extends 'base.html' %}
 
-        {# Шапка сайта (повторяется на всех страницах) #}
-        <header class="container">
-            {# Ссылка на главную страницу с использованием url_for #}
-            <a href="{{ url_for('index') }}" class="logo">
-                {# Путь к изображению логотипа из static/img/ #}
-                <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
-            </a>
-            {# Основная навигация сайта #}
-            <nav>
-                <ul>
-                    {# Ссылки на другие страницы с использованием url_for #}
-                    <li><a href="{{ url_for('about') }}">О нас</a></li>
-                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
-                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
-                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
-                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
-                    {# Ссылки Входа/Выхода/Профиля в зависимости от статуса пользователя #}
-                    {% if current_user.is_authenticated %}
-                        {# Пользователь авторизован #}
-                        {# Опционально: ссылка на профиль пользователя #}
-                        {# <li><a href="{{ url_for('profile') }}">Привет, {{ current_user.username }}</a></li> #}
-                        <li><a href="{{ url_for('logout') }}">Выйти</a></li>
-                    {% else %}
-                        {# Пользователь не авторизован #}
-                        <li><a href="{{ url_for('login') }}">Войти</a></li>
-                        {# Опционально: ссылка на регистрацию #}
-                        {# <li><a href="{{ url_for('register') }}">Регистрация</a></li> #}
-                    {% endif %}
-                </ul>
-            </nav>
-        </header>
+{# Переопределяем блок title для заголовка страницы #}
+{% block title %}Медиа{% endblock %}
 
+{# Переопределяем блок body_class для специфичных стилей страницы #}
+{% block body_class %}page-media{% endblock %}
 
-        {# Место для отображения flash сообщений (над основным контентом) #}
-        <div class="container mt-3"> {# Добавим небольшой отступ сверху #}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        {# Классы alert из Bootstrap, используем 'category' ('info', 'success', 'warning', 'danger') как часть класса #}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+{# --- Переопределяем блок content для основного содержимого страницы --- #}
+{% block content %}
+    <div class="container"> {# Оставляем контейнер, если он нужен для центрирования/отступов основного контента #}
+        <div class="title-container">
+             {# Ссылка "Создать запись" видна ТОЛЬКО авторизованным пользователям #}
+            {% if current_user.is_authenticated %}
+                {# Используем url_for для перехода на страницу создания поста #}
+                <a class="on-page" href="{{ url_for('create') }}">Создать запись</a>
+            {% endif %}
+            <h1>Медиа</h1>
         </div>
 
-        {# Основное содержимое страницы "Медиа" #}
-        <main class="container flex-grow-1">
-            <div class="container">
-                <div class="title-container">
-                     {# Ссылка "Создать запись" видна ТОЛЬКО авторизованным пользователям #}
-                    {% if current_user.is_authenticated %}
-                        {# Используем url_for для перехода на страницу создания поста #}
-                        <a class="on-page" href="{{ url_for('create') }}">Создать запись</a>
-                    {% endif %}
-                    <h1>Медиа</h1>
-                </div>
+        {# Здесь был другой контент страницы Медиа, если он есть #}
+        {# ... ваш другой контент Медиа ... #}
 
-                {# Здесь будет другой контент страницы Медиа, если он есть #}
-                {# ... ваш другой контент Медиа ... #}
+        {# --- Список постов из базы данных --- #}
+        <div class="posts-list mt-5"> {# Добавим отступ сверху #}
+            <h2>Наши записи</h2> {# Заголовок для списка постов #}
 
-                {# --- Список постов из базы данных --- #}
-                <div class="posts-list mt-5"> {# Добавим отступ сверху #}
-                    <h2>Наши записи</h2> {# Заголовок для списка постов #}
+            {% if posts %} {# Проверяем, есть ли посты для отображения #}
+                {% for post in posts %}
+                    <div class="post-item mt-4" style="border: 3px solid #eee; padding: 20px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.05);"> {# Пример стилизации блока поста #}
+                        <h3>{{ post.title }}</h3> {# Заголовок поста #}
+                            <h5>{{ post.text }}</h5> {# Текст поста #}
 
-                    {% if posts %} {# Проверяем, есть ли посты для отображения #}
-                        {% for post in posts %}
-                            <div class="post-item mt-4" style="border: 3px solid #eee; padding: 20px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.05);"> {# Пример стилизации блока поста #}
-                                <h3>{{ post.title }}</h3> {# Заголовок поста #}
+                         {# --- Отображаем дату и время создания в UTC+5 --- #}
+                        {# Используем пользовательский фильтр format_datetime_timezone #}
+                        <small style="color: #ccc; opacity: 0.7;">
+                            Опубликовано: {{ post.created_at | format_datetime_timezone('Asia/Yekaterinburg', '%Y-%m-%d %H:%M') }} {# <-- Здесь используем фильтр #}
+                        </small>
+                        {# --- Конец отображения даты --- #}
 
-                                {# --- Отображаем изображение, если оно есть --- #}
-                                {% if post.image_filename %} {# Проверяем, сохранено ли имя файла изображения для этого поста #}
-                                    {# Генерируем URL к изображению, используя url_for('static', ...) #}
-                                    {# Путь будет: static/post_images/имя_файла_изображения #}
-                                    <img src="{{ url_for('static', filename='post_images/' + post.image_filename) }}" alt="Изображение к посту" class="post-image"> {# Используем класс .post-image из style.css #}
-                                {% endif %}
-                                {# --- Конец отображения изображения --- #}
+                        {# Если добавили автора: <small>Опубликовано: {{ post.author.username }}</small> #}
 
-                                <p>{{ post.text }}</p> {# Текст поста #}
+                        {# --- Отображаем изображение, если оно есть --- #}
+                        {% if post.image_filename %} {# Проверяем, сохранено ли имя файла изображения для этого поста #}
+                            {# Генерируем URL к изображению, используя url_for('static', ...) #}
+                            {# Путь будет: static/post_images/имя_файла_изображения #}
+                            <img src="{{ url_for('static', filename='post_images/' + post.image_filename) }}" alt="Изображение к посту" class="post-image"> {# Используем класс .post-image из style.css #}
+                        {% endif %}
+                        {# --- Конец отображения изображения --- #}
 
-                                {# --- Отображаем дату и время создания в UTC+5 --- #}
-                                {# Используем пользовательский фильтр format_datetime_timezone #}
-                                <small style="color: #ccc; opacity: 0.7;">
-                                    Опубликовано: {{ post.created_at | format_datetime_timezone('Asia/Yekaterinburg', '%Y-%m-%d %H:%M') }} {# <-- Здесь используем фильтр #}
-                                </small>
-                                {# --- Конец отображения даты --- #}
 
-                                {# Если добавили автора: <small>Опубликовано: {{ post.author.username }}</small> #}
 
-                                {# --- Кнопки Редактировать и Удалить (видны только авторизованным) --- #}
-                                {% if current_user.is_authenticated %}
-                                    <div class="post-actions mt-3"> {# Добавляем небольшой отступ сверху #}
-                                        {# Ссылка на страницу редактирования #}
-                                        <a href="{{ url_for('edit', post_id=post.id) }}" class="btn btn-secondary btn-sm me-2">Редактировать</a> {# Используем классы Bootstrap для кнопок #}
+                        {# --- Кнопки Редактировать и Удалить (видны только авторизованным) --- #}
+                        {% if current_user.is_authenticated %}
+                            <div class="post-actions mt-3"> {# Добавляем небольшой отступ сверху #}
+                                {# Ссылка на страницу редактирования #}
+                                <a href="{{ url_for('edit', post_id=post.id) }}" class="btn btn-secondary btn-sm me-2">Редактировать</a> {# Используем классы Bootstrap для кнопок #}
 
-                                        {# Форма для удаления (отправляет POST запрос) #}
-                                        <form action="{{ url_for('delete', post_id=post.id) }}" method="POST" style="display:inline;"> {# display:inline; чтобы форма не переносилась на новую строку #}
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить эту запись?');">Удалить</button> {# Добавляем подтверждение удаления #}
-                                        </form>
-                                    </div>
-                                {% endif %}
-                                {# --- Конец кнопок действий --- #}
-
+                                {# Форма для удаления (отправляет POST запрос) #}
+                                <form action="{{ url_for('delete', post_id=post.id) }}" method="POST" style="display:inline;"> {# display:inline; чтобы форма не переносилась на новую строку #}
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить эту запись?');">Удалить</button> {# Добавляем подтверждение удаления #}
+                                </form>
                             </div>
-                        {% endfor %}
-                    {% else %} {# Если постов пока нет #}
-                        <p style="color: #fff; opacity: 0.8;">Пока нет опубликованных записей.</p> {# Добавил стили для видимости текста #}
-                    {% endif %}
-                </div>
-                {# --- Конец списка постов --- #}
+                        {% endif %}
+                        {# --- Конец кнопок действий --- #}
 
-            </div>
-        </main>
+                    </div>
+                {% endfor %}
+            {% else %} {# Если постов пока нет #}
+                <p style="color: #fff; opacity: 0.8;">Пока нет опубликованных записей.</p> {# Добавил стили для видимости текста #}
+            {% endif %}
+        </div>
+        {# --- Конец списка постов --- #}
 
-        {# Подвал сайта (повторяется на всех страницах) #}
-        <footer class="container">
-            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
-            <div class="footer-right">
-                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
-                <div class="footer-links">
-                    <a href="https://t.me/dopemusic_records" target="_blank">
-                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank">
-                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank">
-                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
-                    </a>
-                </div>
-            </div>
-        </footer>
+    </div> {# Закрытие контейнера #}
+{% endblock %}
+{# --- Конец блока content --- #}
 
-    </div> {# Закрытие div.page #}
-
-    {# Подключение Bootstrap JS с CDN - ДОЛЖНО БЫТЬ В КОНЦЕ BODY #}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    {# Если на этой странице есть специфичные скрипты, подключите их здесь с url_for #}
-    {# <script src="{{ url_for('static', filename='js/media_script.js') }}"></script> #}
-
-</body>
-</html>
+{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
+{# {% block extra_scripts %}
+    <script src="{{ url_for('static', filename='js/media_script.js') }}"></script>
+{% endblock %} #}

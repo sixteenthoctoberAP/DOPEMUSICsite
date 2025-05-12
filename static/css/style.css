@@ -278,6 +278,8 @@ h4{
     padding: 32px 0;
 }
 
+
+
 /* для страницы label */
 
 .page-label {
@@ -496,6 +498,15 @@ h4{
     border: 3px solid #eee;
 }
 
+.pricelist{
+margin-top: 32px;
+    width: 760px;
+display: block;
+    height: 760px; /* Возможно, стоит использовать max-height и отношение сторон */
+    border: 3px solid #eee;
+    margin-left: auto; /* Выравнивание по центру */
+    margin-right: auto; /* Выравнивание по центру */
+}
 /* отзывы */
 .reviews h1{
     padding-top: 80px;
@@ -554,12 +565,6 @@ h4{
   color: #ffffff;
   position: relative;
 }
-
-/* .play-btn.active {
-  color: #fff;
-  outline: 2px solid #f6c96b;
-  border-radius: 4px;
-} */
 
 .time {
   font-size: 0.9rem;
@@ -660,7 +665,6 @@ h4{
     border-width: 3px;
     text-decoration: none;
     border-radius: 0px;
-
 }
 
 /* Убедимся, что цвет текста применяется корректно при наведении/фокусе */

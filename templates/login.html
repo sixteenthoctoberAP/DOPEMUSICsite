@@ -1,127 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {# Подключение вашего style.css из папки static/css/ #}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {# Подключение favicon из папки static/ #}
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    {# Заголовок страницы #}
-    <title>Вход</title>
-</head>
-{# Класс body для страницы входа #}
-<body class="page-login">
-    <div class="page">
+{# login.html #}
+{# Указываем, что этот шаблон наследует от base.html #}
+{% extends 'base.html' %}
 
-        {# Шапка сайта (повторяется на всех страницах) #}
-        <header class="container">
-            {# Ссылка на главную страницу с использованием url_for #}
-            <a href="{{ url_for('index') }}" class="logo">
-                {# Путь к изображению логотипа из static/img/ #}
-                <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
-            </a>
-            {# Основная навигация сайта #}
-            <nav>
-                <ul>
-                    {# Ссылки на другие страницы с использованием url_for #}
-                    <li><a href="{{ url_for('about') }}">О нас</a></li>
-                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
-                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
-                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
-                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
-                     {# Ссылки Входа/Выхода/Профиля в зависимости от статуса пользователя #}
-                    {% if current_user.is_authenticated %}
-                        {# Пользователь авторизован #}
-                        {# Опционально: ссылка на профиль пользователя #}
-                        {# <li><a href="{{ url_for('profile') }}">Привет, {{ current_user.username }}</a></li> #}
-                        <li><a href="{{ url_for('logout') }}">Выйти</a></li>
-                    {% else %}
-                        {# Пользователь не авторизован #}
-                        <li><a href="{{ url_for('login') }}">Войти</a></li>
-                        {# Опционально: ссылка на регистрацию #}
-                        {# <li><a href="{{ url_for('register') }}">Регистрация</a></li> #}
-                    {% endif %}
-                </ul>
-            </nav>
-        </header>
+{# Переопределяем блок title для заголовка страницы #}
+{% block title %}Вход{% endblock %}
 
-         {# Место для отображения flash сообщений #}
-        <div class="container mt-3">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
+{# Переопределяем блок body_class для специфичных стилей страницы #}
+{% block body_class %}page-login{% endblock %}
 
 
-        {# Основное содержимое страницы "Вход" #}
-        <main class="container flex-grow-1">
-            <div class="container">
-                <h1>Вход</h1>
+{# --- Переопределяем блок content для основного содержимого страницы --- #}
+{% block content %}
+    {# Уникальное содержимое страницы "Вход" начинается здесь.
+       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
+       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом login.html.
+    #}
 
-                {# Форма отправляется на текущий URL ('/login') методом POST #}
-                 {# query string 'next' передается автоматически Flask-Login после перенаправления на страницу логина из-за @login_required #}
-                <form method="post" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05); border: 3px solid #eee; border-radius:0px;  max-width: 400px; margin: 20px auto;">
-                    <div class="mb-3">
-                        <label for="usernameInput" class="form-label" style="color: #fff;">Имя пользователя</label>
-                         {# value={{ username or '' }} сохранит введенное значение при ошибке #}
-                        <input type="text" name="username" id="usernameInput" placeholder="Введите имя пользователя" class="form-control" value="{{ username or '' }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="passwordInput" class="form-label" style="color: #fff;">Пароль</label>
-                        <input type="password" name="password" id="passwordInput" placeholder="Введите пароль" class="form-control" required>
-                    </div>
+    <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
+        <h1>Вход</h1>
 
-                    {# Опционально: Чекбокс "Запомнить меня" #}
-                    {# <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="rememberMeCheck" name="remember">
-                        <label class="form-check-label" for="rememberMeCheck" style="color: #fff;">Запомнить меня</label>
-                    </div> #}
-
-                    <button class="btn btn-primary" type="submit">Войти</button>
-
-                    {# Ссылка на страницу регистрации (если она будет реализована) #}
-                    {# <p class="mt-3" style="color: #fff;">Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p> #}
-                </form>
+        {# Форма отправляется на текущий URL ('/login') методом POST #}
+         {# query string 'next' передается автоматически Flask-Login после перенаправления на страницу логина из-за @login_required #}
+        <form method="post" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05); border: 3px solid #eee; border-radius:0px;  max-width: 400px; margin: 20px auto;">
+            <div class="mb-3">
+                <label for="usernameInput" class="form-label" style="color: #fff;">Имя пользователя</label>
+                 {# value={{ username or '' }} сохранит введенное значение при ошибке #}
+                <input type="text" name="username" id="usernameInput" placeholder="Введите имя пользователя" class="form-control" value="{{ username or '' }}" required>
             </div>
-        </main>
-
-        {# Подвал сайта (повторяется на всех страницах) #}
-        <footer class="container">
-            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
-            <div class="footer-right">
-                {# Внешняя ссылка на Telegram (не требует url_for) #}
-                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
-                <div class="footer-links">
-                    {# Пути к изображениям соцсетей из static/img/ #}
-                    <a href="https://t.me/dopemusic_records" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
-                    </a>
-                </div>
+            <div class="mb-3">
+                <label for="passwordInput" class="form-label" style="color: #fff;">Пароль</label>
+                <input type="password" name="password" id="passwordInput" placeholder="Введите пароль" class="form-control" required>
             </div>
-        </footer>
 
-    </div> {# Закрытие div.page #}
+            {# Опционально: Чекбокс "Запомнить меня" #}
+            {# <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMeCheck" name="remember">
+                <label class="form-check-label" for="rememberMeCheck" style="color: #fff;">Запомнить меня</label>
+            </div> #}
 
-    {# Подключение Bootstrap JS с CDN (не требует url_for) #}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    {# Если на этой странице есть специфичные скрипты, подключите их здесь с url_for #}
-    {# <script src="{{ url_for('static', filename='js/login_script.js') }}"></script> #}
+            <button class="btn btn-primary" type="submit">Войти</button>
 
-</body>
-</html>
+            {# Ссылка на страницу регистрации (если она будет реализована) #}
+            {# <p class="mt-3" style="color: #fff;">Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p> #}
+        </form>
+    </div> {# Закрытие div.container #}
+
+
+{% endblock %}
+{# --- Конец блока content --- #}
+
+{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
+{# {% block extra_scripts %}
+    <script src="{{ url_for('static', filename='js/login_script.js') }}"></script>
+{% endblock %} #}

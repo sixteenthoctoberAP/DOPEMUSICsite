@@ -1,124 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {# Подключение вашего style.css из папки static/css/ #}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {# Заголовок страницы - уже правильный #}
-    <title>Лейбл</title>
-</head>
-{# Класс body для страницы лейбла #}
-<body class="page-label">
+{# label.html #}
+{# Указываем, что этот шаблон наследует от base.html #}
+{% extends 'base.html' %}
 
-    <div class="page">
+{# Переопределяем блок title для заголовка страницы #}
+{% block title %}Лейбл{% endblock %}
 
-        {# Шапка сайта (общая часть) #}
-        <header class="container">
-            {# Ссылка на главную страницу с использованием url_for #}
-            <a href="{{ url_for('index') }}" class="logo">
-                {# Путь к изображению логотипа из static/img/. Обратите внимание, здесь другой файл логотипа (Group 98.svg). #}
-                <img src="{{ url_for('static', filename='img/Group 98.svg') }}" alt="logo" style="margin-left: -12px;">
-            </a>
-            {# Основная навигация сайта #}
-            <nav>
-                <ul>
-                    {# Ссылки на другие страницы с использованием url_for #}
-                    <li><a href="{{ url_for('about') }}">О нас</a></li>
-                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
-                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
-                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
-                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
-                </ul>
-            </nav>
-        </header>
+{# Переопределяем блок body_class для специфичных стилей страницы #}
+{% block body_class %}page-label{% endblock %}
 
-        {# Основное содержимое страницы "Лейбл" #}
-        <main class="container flex-grow-1">
-            <div class="container">
-                <div class="title-container">
-                    <h1>Лейбл</h1>
-                    {# Внешняя ссылка на VK - не требует url_for #}
-                    <a class="on-page" href="https://vk.com/dopemusiclabel?from=groups" target="_blank">Подробнее</a>
+{# --- Переопределяем блок logo для этой страницы --- #}
+{% block logo %}
+    {# Вставляем изображение логотипа для страницы Лейбл #}
+    <img src="{{ url_for('static', filename='img/Group 98.svg') }}" alt="Логотип Лейбла" style="margin-left: -12px;">
+{% endblock %}
+{# --- Конец переопределения блока logo --- #}
+
+
+{# --- Переопределяем блок content для основного содержимого страницы --- #}
+{% block content %}
+    {# Уникальное содержимое страницы "Лейбл" начинается здесь.
+       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
+       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом label.html.
+    #}
+
+    <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
+        <div class="title-container">
+            <h1>Лейбл</h1>
+            {# Внешняя ссылка на VK - не требует url_for #}
+            <a class="on-page" href="https://vk.com/dopemusiclabel?from=groups" target="_blank">Подробнее</a>
+        </div>
+
+        <h2>DOPE MUSIC LABEL.</h2>
+        <h5>Предоставляем качественные услуги по распространению музыки по всему миру. <br> Для начинающих и опытных музыкантов в любом жанре.</h5>
+
+        {# Внешние ссылки - не требуют url_for #}
+        <h5>Работаем со <a href="https://zvonkodigital.com/" target="_blank">ZVONKO digital</a> & <a href="https://www.believe.com/russia-cis" target="_blank">Believe Music</a></h5>
+
+        <h6>• Оперативная выгрузка на цифровые платформы<br>
+            • Принимаем любые обложки без ограничений<br>
+            • Можем прописывать серым шрифтом prod. by<br>
+            • Синхронизация текста в VK Музыка, Яндекс.Музыка, Apple Music<br>
+            • Добавим видеошот на Ваш релиз<br>
+            • Техническая поддержка 24/7<br>
+            • Честная и открытая статистика
+        </h6>
+
+        <div class="label-container">
+            <div class="label-item">
+                <div class="label-item-block">
+                    {# Внешняя ссылка и путь к изображению из static/img/ #}
+                    <a href="https://vk.com/market-129632596?screen=group"><img src="{{ url_for('static', filename='img/услуги.jpg') }}" alt="услуги"></a>
+                    {# Внешняя ссылка - не требует url_for #}
+                    <a href="https://vk.com/market-129632596?screen=group"><span>Услуги</span></a>
                 </div>
 
-                <h2>DOPE MUSIC LABEL.</h2>
-                <h5>Предоставляем качественные услуги по распространению музыки по всему миру. <br> Для начинающих и опытных музыкантов в любом жанре.</h5>
+                <div class="label-item-block">
+                    {# Внешняя ссылка и путь к изображению из static/img/ #}
+                    <a href="https://vk.com/topic-129632596_52786918"><img src="{{ url_for('static', filename='img/требования.jpg') }}" alt="требования"></a>
+                    {# Внешняя ссылка - не требует url_for #}
+                    <a href="https://vk.com/topic-129632596_52786918"><span>Требования</span></a>
+                </div>
 
-                {# Внешние ссылки - не требуют url_for #}
-                <h5>Работаем со <a href="https://zvonkodigital.com/" target="_blank">ZVONKO digital</a> & <a href="https://www.believe.com/russia-cis" target="_blank">Believe Music</a></h5>
+                <div class="label-item-block">
+                    {# Внешняя ссылка и путь к изображению из static/img/ #}
+                    <a href="https://vk.com/audios-129632596"><img src="{{ url_for('static', filename='img/наши релизы.jpg') }}" alt="релизы"></a>
+                    {# Внешняя ссылка - не требует url_for #}
+                    <a href="https://vk.com/audios-129632596"><span>Наши релизы</span></a>
+                </div>
 
-                <h6>• Оперативная выгрузка на цифровые платформы<br>
-                    • Принимаем любые обложки без ограничений<br>
-                    • Можем прописывать серым шрифтом prod. by<br>
-                    • Синхронизация текста в VK Музыка, Яндекс.Музыка, Apple Music<br>
-                    • Добавим видеошот на Ваш релиз<br>
-                    • Техническая поддержка 24/7<br>
-                    • Честная и открытая статистика
-                </h6>
-
-                <div class="label-container">
-                    <div class="label-item">
-                        <div class="label-item-block">
-                            {# Внешняя ссылка и путь к изображению из static/img/ #}
-                            <a href="https://vk.com/market-129632596?screen=group"><img src="{{ url_for('static', filename='img/услуги.jpg') }}" alt="услуги"></a>
-                            {# Внешняя ссылка - не требует url_for #}
-                            <a href="https://vk.com/market-129632596?screen=group"><span>Услуги</span></a>
-                        </div>
-
-                        <div class="label-item-block">
-                            {# Внешняя ссылка и путь к изображению из static/img/ #}
-                            <a href="https://vk.com/topic-129632596_52786918"><img src="{{ url_for('static', filename='img/требования.jpg') }}" alt="требования"></a>
-                            {# Внешняя ссылка - не требует url_for #}
-                            <a href="https://vk.com/topic-129632596_52786918"><span>Требования</span></a>
-                        </div>
-
-                        <div class="label-item-block">
-                            {# Внешняя ссылка и путь к изображению из static/img/ #}
-                            <a href="https://vk.com/audios-129632596"><img src="{{ url_for('static', filename='img/наши релизы.jpg') }}" alt="релизы"></a>
-                            {# Внешняя ссылка - не требует url_for #}
-                            <a href="https://vk.com/audios-129632596"><span>Наши релизы</span></a>
-                        </div>
-
-                        <div class="label-item-block">
-                            {# Внешняя ссылка и путь к изображению из static/img/ #}
-                            <a href="https://vk.com/topic-129632596_52786841"><img src="{{ url_for('static', filename='img/отзывы.jpg') }}" alt="отзывы"></a>
-                            {# Внешняя ссылка - не требует url_for #}
-                            <a href="https://vk.com/topic-129632596_52786841"><span>Отзывы</span></a>
-                        </div>
-                    </div>
+                <div class="label-item-block">
+                    {# Внешняя ссылка и путь к изображению из static/img/ #}
+                    <a href="https://vk.com/topic-129632596_52786841"><img src="{{ url_for('static', filename='img/отзывы.jpg') }}" alt="отзывы"></a>
+                    {# Внешняя ссылка - не требует url_for #}
+                    <a href="https://vk.com/topic-129632596_52786841"><span>Отзывы</span></a>
                 </div>
             </div>
-        </main>
+        </div>
+    </div> {# Закрытие div.container #}
 
-        {# Подвал сайта (общая часть) #}
-        <footer class="container">
-            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
-            <div class="footer-right">
-                {# Внешняя ссылка на Telegram (не требует url_for) #}
-                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
-                <div class="footer-links">
-                    {# Пути к изображениям соцсетей из static/img/ #}
-                    <a href="https://t.me/dopemusic_records" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
-                    </a>
-                </div>
-            </div>
-        </footer>
-    </div> {# Закрытие div.page #}
 
-    {# Подключение Bootstrap JS с CDN (не требует url_for) #}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    {# Если на этой странице есть специфичные скрипты, подключите их здесь с url_for #}
-    {# <script src="{{ url_for('static', filename='js/label_script.js') }}"></script> #}
+{% endblock %}
+{# --- Конец блока content --- #}
 
-</body>
-</html>
+{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
+{# {% block extra_scripts %}
+    <script src="{{ url_for('static', filename='js/label_script.js') }}"></script>
+{% endblock %} #}

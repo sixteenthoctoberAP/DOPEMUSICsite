@@ -1,182 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {# Подключение вашего style.css из папки static/css/ #}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {# Заголовок страницы - исправлено на "Услуги" #}
-    <title>Услуги</title>
-</head>
-{# Класс body для страницы услуг - исправлено на page-services #}
-<body class="page-services">
+{# services.html #}
+{# Указываем, что этот шаблон наследует от base.html #}
+{% extends 'base.html' %}
 
-    <div class="page">
+{# Переопределяем блок title для заголовка страницы #}
+{% block title %}Услуги{% endblock %}
 
-        {# Шапка сайта (общая часть) #}
-        <header class="container">
-            {# Ссылка на главную страницу с использованием url_for #}
-            <a href="{{ url_for('index') }}" class="logo">
-                {# Путь к изображению логотипа из static/img/ #}
-                <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
-            </a>
-            {# Основная навигация сайта #}
-            <nav>
-                <ul>
-                    {# Ссылки на другие страницы с использованием url_for #}
-                    <li><a href="{{ url_for('about') }}">О нас</a></li>
-                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
-                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
-                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
-                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
-                </ul>
-            </nav>
-        </header>
+{# Переопределяем блок body_class для специфичных стилей страницы #}
+{% block body_class %}page-services{% endblock %}
 
 
-        {# Вторая навигация (внутристраничные якоря) - не требует url_for #}
-        <div class="navbar container">
-            <nav>
-                <ul>
-                    <li><a href="#services">Услуги</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#recording">Запись</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#rent">Аренда</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#mix-master">Mix & Master</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#examples">Примеры работ</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#price">Стоимость</a></li> {# Якорь на раздел внутри этой же страницы #}
-                </ul>
-            </nav>
-        </div>
+{# --- Переопределяем блок content для основного содержимого страницы --- #}
+{% block content %}
+    {# Уникальное содержимое страницы "Услуги" начинается здесь.
+       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
+       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом services.html.
+    #}
 
-        {# Основное содержимое страницы "Услуги" #}
-        <main class="container flex-grow-1">
-            <div class="container">
-                <h1 id="services">Услуги</h1>
+    {# Вторая навигация (внутристраничные якоря) - остается здесь, т.к. она уникальна для этой страницы #}
+    {# Убедитесь, что этот div находится внутри контейнера, если это необходимо по вашему дизайну #}
+    {# Если base.html уже предоставляет <div class="container"> внутри <main>, возможно, стоит убрать класс container отсюда #}
+    <div class="navbar container">
+        <nav>
+            <ul>
+                <li><a href="#services">Услуги</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#recording">Запись</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#rent">Аренда</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#mix-master">Mix & Master</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#examples">Примеры работ</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#price">Стоимость</a></li> {# Якорь на раздел внутри этой же страницы #}
+            </ul>
+        </nav>
+    </div>
 
-                <h2 id="recording">Запись</h2>
-                <h5>Почасовая запись со звукорежиссером / Помощь и советы по ходу записи</h5>
+    {# Основное содержимое страницы "Услуги" из вашего старого кода #}
+    {# Убедитесь, что все эти секции находятся внутри блока content #}
 
-                <div class="rent">
-                    <h2 id="rent">Аренда студии</h2>
-                    <h5>Аренда студии звукозаписи со всем необходимым оборудованием обеспечивает оптимальные условия для Вашей работы</h5>
+    <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
+        <h1 id="services">Услуги</h1>
 
-                    <h2 id="mix-master">Сведение & Мастеринг</h2>
-                    <h5>Сведение и мастеринг придают вашему треку профессиональное звучание. Мы уделяем внимание каждому элементу микса. Это позволяет треку звучать сбалансировано и соответствовать высоким стандартам качества.</h5>
+        <h2 id="recording">Запись</h2>
+        <h5>Почасовая запись со звукорежиссером / Помощь и советы по ходу записи</h5>
 
-                    <h2 id="examples">Примеры работ</h2>
-                    <h4>До / После</h4>
+        <div class="rent">
+            <h2 id="rent">Аренда студии</h2>
+            <h5>Аренда студии звукозаписи со всем необходимым оборудованием обеспечивает оптимальные условия для Вашей работы</h5>
 
-                    <div class="examples-block container mt-5">
-                        <div class="track-row row mb-4 align-items-center">
-                            <div class="col-md-6 d-flex align-items-center">
-                                <button class="play-btn me-3" onclick="togglePlay(1, 'before')">
-                                    <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
-                                        <path fill="currentColor" d="M8 5v14l11-7z"/>
-                                    </svg>
-                                    <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
-                                        <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                                    </svg>
-                                </button>
-                                <span>До</span>
-                                <div class="time ms-3">0:00 / 0:00 </div>
-                                <div class="progress-container ms-3" style="flex: 1; display: none;">
-                                    <div class="progress-bar"></div>
-                                </div>
-                            </div>
+            <h2 id="mix-master">Сведение & Мастеринг</h2>
+            <h5>Сведение и мастеринг придают вашему треку профессиональное звучание. Мы уделяем внимание каждому элементу микса. Это позволяет треку звучать сбалансировано и соответствовать высоким стандартам качества.</h5>
 
-                            <div class="col-md-6 d-flex align-items-center">
-                                <button class="play-btn me-3" onclick="togglePlay(1, 'after')">
-                                    <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
-                                        <path fill="currentColor" d="M8 5v14l11-7z"/>
-                                    </svg>
-                                    <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
-                                        <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                                    </svg>
-                                </button>
-                                <span>После</span>
-                                <div class="time ms-3">0:00 / 0:00</div>
-                                <div class="progress-container ms-3" style="flex: 1; display: none;">
-                                    <div class="progress-bar"></div>
-                                </div>
-                            </div>
-                            {# Пути к аудиофайлам из static/audio/ #}
-                            <audio id="track1-before" src="{{ url_for('static', filename='audio/Sheck Wes - ILMB.mp3') }}"></audio>
-                            <audio id="track1-after" src="{{ url_for('static', filename='audio/МЭЙБИ БЭЙБИ - Такая любовь.mp3') }}"></audio>
+            <h2 id="examples">Примеры работ</h2>
+            <h4>До / После</h4>
+
+            <div class="examples-block container mt-5">
+                <div class="track-row row mb-4 align-items-center">
+                    <div class="col-md-6 d-flex align-items-center">
+                        <button class="play-btn me-3" onclick="togglePlay(1, 'before')">
+                            <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor" d="M8 5v14l11-7z"/>
+                            </svg>
+                            <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
+                                <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                            </svg>
+                        </button>
+                        <span>До</span>
+                        <div class="time ms-3">0:00 / 0:00 </div>
+                        <div class="progress-container ms-3" style="flex: 1; display: none;">
+                            <div class="progress-bar"></div>
                         </div>
+                    </div>
 
-                        <div class="next-track">
-                            <div class="track-row row mb-4 align-items-center">
-                                <div class="col-md-6 d-flex align-items-center">
-                                    <button class="play-btn me-3" onclick="togglePlay(2, 'before')">
-                                        <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
-                                            <path fill="currentColor" d="M8 5v14l11-7z"/>
-                                        </svg>
-                                        <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
-                                            <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                                        </svg>
-                                    </button>
-                                    <span>До</span>
-                                    <div class="time ms-3">0:00 / 0:00</div>
-                                    <div class="progress-container ms-3" style="flex: 1; display: none;">
-                                        <div class="progress-bar"></div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6 d-flex align-items-center">
-                                    <button class="play-btn me-3" onclick="togglePlay(2, 'after')">
-                                        <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
-                                            <path fill="currentColor" d="M8 5v14l11-7z"/>
-                                        </svg>
-                                        <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
-                                            <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                                        </svg>
-                                    </button>
-                                    <span>После</span>
-                                    <div class="time ms-3">0:00 / 0:00</div>
-                                    <div class="progress-container ms-3" style="flex: 1; display: none;">
-                                        <div class="progress-bar"></div>
-                                    </div>
-                                </div>
-
-                                {# Пути к аудиофайлам для Трека 2 из static/audio/ #}
-                                <audio id="track2-before" src="{{ url_for('static', filename='audio/Lil Tecca - Dark Thoughts.mp3') }}"></audio>
-                                <audio id="track2-after" src="{{ url_for('static', filename='audio/Платина - Санта Клаус.mp3') }}"></audio>
-                            </div>
+                    <div class="col-md-6 d-flex align-items-center">
+                        <button class="play-btn me-3" onclick="togglePlay(1, 'after')">
+                            <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor" d="M8 5v14l11-7z"/>
+                            </svg>
+                            <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
+                                <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                            </svg>
+                        </button>
+                        <span>После</span>
+                        <div class="time ms-3">0:00 / 0:00</div>
+                        <div class="progress-container ms-3" style="flex: 1; display: none;">
+                            <div class="progress-bar"></div>
                         </div>
-                        </div>
-
-                    <h2 id="price">Стоимость</h2>
-                    {# Путь к изображению прайс-листа из static/img/ #}
-                    <img src="{{ url_for('static', filename='img/pricelist.png') }}" alt="Стоимость" class="pricelist">
+                    </div>
+                    {# Пути к аудиофайлам из static/audio/ #}
+                    <audio id="track1-before" src="{{ url_for('static', filename='audio/Sheck Wes - ILMB.mp3') }}"></audio>
+                    <audio id="track1-after" src="{{ url_for('static', filename='audio/МЭЙБИ БЭЙБИ - Такая любовь.mp3') }}"></audio>
                 </div>
 
-            </main>
+                <div class="next-track">
+                    <div class="track-row row mb-4 align-items-center">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <button class="play-btn me-3" onclick="togglePlay(2, 'before')">
+                                <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="currentColor" d="M8 5v14l11-7z"/>
+                                </svg>
+                                <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
+                                    <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                                </svg>
+                            </button>
+                            <span>До</span>
+                            <div class="time ms-3">0:00 / 0:00</div>
+                            <div class="progress-container ms-3" style="flex: 1; display: none;">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
 
-        {# Подвал сайта (общая часть) #}
-        <footer class="container">
-            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
-            <div class="footer-right">
-                {# Внешняя ссылка на Telegram (не требует url_for) #}
-                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
-                <div class="footer-links">
-                    {# Пути к изображениям соцсетей из static/img/ #}
-                    <a href="https://t.me/dopemusic_records" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank"> {# Внешняя ссылка #}
-                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
-                    </a>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <button class="play-btn me-3" onclick="togglePlay(2, 'after')">
+                                <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="currentColor" d="M8 5v14l11-7z"/>
+                                </svg>
+                                <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
+                                    <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                                </svg>
+                            </button>
+                            <span>После</span>
+                            <div class="time ms-3">0:00 / 0:00</div>
+                            <div class="progress-container ms-3" style="flex: 1; display: none;">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+
+                        {# Пути к аудиофайлам для Трека 2 из static/audio/ #}
+                        <audio id="track2-before" src="{{ url_for('static', filename='audio/Lil Tecca - Dark Thoughts.mp3') }}"></audio>
+                        <audio id="track2-after" src="{{ url_for('static', filename='audio/Платина - Санта Клаус.mp3') }}"></audio>
+                    </div>
                 </div>
-            </div>
-        </footer>
+            </div> {# Закрытие div.examples-block container #}
 
-    </div> {# Закрытие div.page #}
 
+            <h2 id="price">Стоимость</h2>
+            {# Путь к изображению прайс-листа из static/img/ #}
+            <img src="{{ url_for('static', filename='img/pricelist.png') }}" alt="Стоимость" class="pricelist">
+        </div> {# Закрытие div.rent #}
+
+
+    </div> {# Закрытие div.container внутри main #}
+
+
+{% endblock %}
+{# --- Конец блока content --- #}
+
+{# --- Переопределяем блок extra_scripts для подключения специфичного скрипта страницы Услуги --- #}
+{% block extra_scripts %}
+    {# Подключение вашего script.js из папки static/ #}
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-</html>
+    {# Если у вас есть другие скрипты только для этой страницы, добавьте их здесь #}
+{% endblock %}
+{# --- Конец блока extra_scripts --- #}

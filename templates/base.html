@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# Подключение Bootstrap CSS с CDN #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {# Подключение вашего style.css из папки static/css/ #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+     {# Подключение favicon из папки static/ #}
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    {# Блок для заголовка страницы. Каждая дочерняя страница может его переопределить. #}
+    <title>{% block title %}Dope Music{% endblock %}</title>
+</head>
+{# Класс body может быть переопределен на дочерних страницах, если нужен специфичный стиль #}
+<body class="{% block body_class %}{% endblock %}">
+    <div class="page">
+
+        {# Шапка сайта (общая для всех страниц) #}
+        <header class="container">
+            {# Ссылка на главную страницу с использованием url_for #}
+            <a href="{{ url_for('index') }}" class="logo">
+                {# --- Блок для ЛОГОТИПА --- #}
+                {# Этот блок можно переопределить в дочерних шаблонах, чтобы использовать другое изображение #}
+                {% block logo %}
+                    {# Логотип по умолчанию #}
+                    <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
+                {% endblock %}
+                {# --- Конец блока ЛОГОТИПА --- #}
+            </a>
+            {# Основная навигация сайта #}
+            <nav>
+                <ul>
+                    {# Ссылки на другие страницы с использованием url_for #}
+                    <li><a href="{{ url_for('about') }}">О нас</a></li>
+                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
+                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
+                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
+                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
+                    {# --- Условное отображение ссылок Входа/Выхода --- #}
+                    {% if current_user.is_authenticated %}
+                        {# Пользователь авторизован - показываем кнопку Выйти #}
+                        <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+                    {# Проверяем, что пользователь НЕ авторизован И текущая страница - 'media' #}
+                    {% elif request.endpoint == 'media' %}
+                        {# Пользователь не авторизован и находится на странице Медиа - показываем кнопку Войти #}
+                        <li><a href="{{ url_for('login') }}">Войти</a></li>
+                    {% endif %}
+                    {# --- Конец условного отображения --- #}
+                </ul>
+            </nav>
+        </header>
+
+        {# Место для отображения flash сообщений (общая для всех страниц) #}
+        <div class="container mt-3"> {# Добавим небольшой отступ сверху #}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {# Классы alert из Bootstrap, используем 'category' ('info', 'success', 'warning', 'danger') как часть класса #}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {# --- Блок для основного содержимого страницы --- #}
+        {# Каждая дочерняя страница ДОЛЖНА определить этот блок #}
+        <main class="container flex-grow-1">
+            {% block content %}
+                {# Содержимое по умолчанию, если блок не переопределен (можно оставить пустым) #}
+            {% endblock %}
+        </main>
+        {# --- Конец блока основного содержимого --- #}
+
+
+        {# Подвал сайта (общий для всех страниц) #}
+        <footer class="container">
+            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
+            <div class="footer-right">
+                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
+                <div class="footer-links">
+                    <a href="https://t.me/dopemusic_records" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
+                    </a>
+                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
+                    </a>
+                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+    </div> {# Закрытие div.page #}
+
+    {# Подключение Bootstrap JS с CDN - ДОЛЖНО БЫТЬ В КОНЦЕ BODY #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {# Блок для дополнительных скриптов, специфичных для конкретной страницы #}
+    {% block extra_scripts %}
+    {% endblock %}
+
+</body>
+</html>

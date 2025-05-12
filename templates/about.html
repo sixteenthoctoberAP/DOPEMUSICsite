@@ -1,167 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {# Подключение вашего style.css из папки static/css/ #}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {# Заголовок страницы #}
-    <title>О нас</title>
-</head>
-{# Класс body page-index в оригинале, но для "О нас" может быть page-about или другой #}
-{# Если используете классы для body по страницам, добавьте нужный сюда #}
-<body class="page-about">
-    <div class="page">
+{# about.html #}
+{# Указываем, что этот шаблон наследует от base.html #}
+{% extends 'base.html' %}
 
-        {# Шапка сайта (общая часть) #}
-        <header class="container">
-            {# Ссылка на главную страницу с использованием url_for #}
-            <a href="{{ url_for('index') }}" class="logo">
-                {# Путь к изображению логотипа из static/img/ #}
-                <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
-            </a>
-            {# Основная навигация сайта #}
-            <nav>
-                <ul>
-                    {# Ссылки на другие страницы с использованием url_for #}
-                    <li><a href="{{ url_for('about') }}">О нас</a></li>
-                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
-                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
-                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
-                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
-                </ul>
-            </nav>
-        </header>
+{# Переопределяем блок title для заголовка страницы #}
+{% block title %}О нас{% endblock %}
 
-        {# Вторая навигация (внутристраничные якоря) - не требует url_for #}
-        <div class="navbar container">
-            <nav>
-                <ul>
-                    <li><a href="#about">О нас</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#team">Команда</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#equipment">Оборудование</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#reviews">Отзывы</a></li> {# Якорь на раздел внутри этой же страницы #}
-                </ul>
-            </nav>
+{# Переопределяем блок body_class для специфичных стилей страницы (если нужен) #}
+{# Если у вас есть класс body для страницы О нас, добавьте его сюда #}
+{% block body_class %}page-about{% endblock %}
+{# Если специфичный класс body не нужен, этот блок можно удалить или оставить пустым #}
+
+
+{# --- Переопределяем блок content для основного содержимого страницы --- #}
+{% block content %}
+    {# Уникальное содержимое страницы "О нас" начинается здесь.
+       Теги <main> и <div class="container"> из base.html уже предоставлены.
+       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом about.html.
+    #}
+
+    {# Вторая навигация (внутристраничные якоря) - остается здесь, т.к. она уникальна для этой страницы #}
+    {# Убедитесь, что этот div находится внутри контейнера, если это необходимо по вашему дизайну #}
+    {# Если base.html уже предоставляет <div class="container"> внутри <main>, возможно, стоит убрать класс container отсюда #}
+    <div class="navbar container">
+        <nav>
+            <ul>
+                <li><a href="#about">О нас</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#team">Команда</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#equipment">Оборудование</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#reviews">Отзывы</a></li> {# Якорь на раздел внутри этой же страницы #}
+            </ul>
+        </nav>
+    </div>
+
+    {# Основное содержимое страницы "О нас" из вашего старого кода #}
+    {# Убедитесь, что все эти секции находятся внутри блока content #}
+
+    <h1 id="about">О нас</h1>
+    <h2>Студия звукозаписи Dope Music</h2>
+    <h5>Мы предлагаем комфортные условия для музыкантов и специалистов звукозаписи любого уровня — от начинающих артистов до опытных профессионалов. Нашей ключевой особенностью является доступная аренда современной оборудованной студии для решения любых творческих задач.</h5>
+    <h5>У нас вы сможете комфортно провести запись треков совместно с друзьями или коллегами, а также создать уникальные композиции самостоятельно, используя собственное оборудование (ноутбук, микрофоны, интерфейсы и музыкальные инструменты).</h5>
+    <h6>Credits: May Wave$ / D4P / BANG OG / Tony Sheikh / Ice IX / Babylaurenne & etc.</h6>
+
+    <div class="team">
+        <h1 id="team">Команда</h1>
+        {# Изображения команды из static/img/ #}
+        <div class="team-info">
+            <img src="{{ url_for('static', filename='img/travis.jpg') }}" alt="team">
+            <h5>Денис (Luvcartier)</h5>
+            <p>Сооснователь студии, Звукорежиссёр</p>
         </div>
 
-        {# Основное содержимое страницы "О нас" #}
-        <main class="container flex-grow-1">
-            <div class="container">
-                <h1 id="about">О нас</h1>
-                <h2>Студия звукозаписи Dope Music</h2>
-                <h5>Мы предлагаем комфортные условия для музыкантов и специалистов звукозаписи любого уровня — от начинающих артистов до опытных профессионалов. Нашей ключевой особенностью является доступная аренда современной оборудованной студии для решения любых творческих задач.</h5>
-                <h5>У нас вы сможете комфортно провести запись треков совместно с друзьями или коллегами, а также создать уникальные композиции самостоятельно, используя собственное оборудование (ноутбук, микрофоны, интерфейсы и музыкальные инструменты).</h5>
-                <h6>Credits: May Wave$ / D4P / BANG OG / Tony Sheikh / Ice IX / Babylaurenne & etc.</h6>
+        <div class="team-info">
+            <img src="{{ url_for('static', filename='img/thugger.jpg') }}" alt="team">
+            <h5>Денис (Luvcartier)</h5>
+            <p>Сооснователь студии, Звукорежиссёр</p>
+        </div>
 
-                <div class="team">
-                    <h1 id="team">Команда</h1>
-                    {# Изображения команды из static/img/ #}
-                    <div class="team-info">
-                        <img src="{{ url_for('static', filename='img/travis.jpg') }}" alt="team">
-                        <h5>Денис (Luvcartier)</h5>
-                        <p>Сооснователь студии, Звукорежиссёр</p>
-                    </div>
+        <div class="team-info">
+            <img src="{{ url_for('static', filename='img/gunna.jpg') }}" alt="team">
+            <h5>Денис (Luvcartier)</h5>
+            <p>Сооснователь студии, Звукорежиссёр</p>
+        </div>
+    </div>
 
-                    <div class="team-info">
-                        <img src="{{ url_for('static', filename='img/thugger.jpg') }}" alt="team">
-                        <h5>Денис (Luvcartier)</h5>
-                        <p>Сооснователь студии, Звукорежиссёр</p>
-                    </div>
+    <div class="equipment">
+        <h1 id ="equipment">Оборудование</h1>
+        <h5>Оборудование на борту студии Dope Music:</h5>
+        <h6>
+        - Микрофон ARK Fet <br>
+        - Звуковой интерфейс Universal Audio Apollo Quad <br>
+        - Звуковой интерфейс Komplete Audio 6 MK2 <br>
+        - Наушники Beyerdynamic DT 770 PRO 80 Ohm <br>
+        - Наушники Beyerdynamic DT 990 250 Ohm <br>
+        - 2-канальный ламповый предусилитель ART TPS II <br>
+        - Ламповый предусилитель/компрессор/эквалайзер ART Pro Channel II <br>
+        - Студийные мониторы YAMAHA HS7 <br>
+        </h6>
 
-                    <div class="team-info">
-                        <img src="{{ url_for('static', filename='img/gunna.jpg') }}" alt="team">
-                        <h5>Денис (Luvcartier)</h5>
-                        <p>Сооснователь студии, Звукорежиссёр</p>
-                    </div>
-                    </div>
-
-                <div class="equipment">
-                    <h1 id ="equipment">Оборудование</h1>
-                    <h5>Оборудование на борту студии Dope Music:</h5>
-                    <h6>
-                    - Микрофон ARK Fet <br>
-                    - Звуковой интерфейс Universal Audio Apollo Quad <br>
-                    - Звуковой интерфейс Komplete Audio 6 MK2 <br>
-                    - Наушники Beyerdynamic DT 770 PRO 80 Ohm <br>
-                    - Наушники Beyerdynamic DT 990 250 Ohm <br>
-                    - 2-канальный ламповый предусилитель ART TPS II <br>
-                    - Ламповый предусилитель/компрессор/эквалайзер ART Pro Channel II <br>
-                    - Студийные мониторы YAMAHA HS7 <br>
-                    </h6>
-
-                    <div id="equipmentCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
-
-                        <div class="carousel-inner">
-                            {# Пути к изображениям оборудования из static/img/ #}
-                            <div class="carousel-item active">
-                                <img src="{{ url_for('static', filename='img/dt770 + mic.png') }}" class="d-block w-100" alt="Наушники и микрофон">
-                            </div>
-
-                            <div class="carousel-item"> {# Убрал второй active #}
-                                <img src="{{ url_for('static', filename='img/UAD.png') }}" class="d-block w-100" alt="UAD звуковая карта">
-                            </div>
-
-                             <div class="carousel-item"> {# Убрал третий active #}
-                                <img src="{{ url_for('static', filename='img/YAMAHA HS7.png') }}" class="d-block w-100" alt="Мониторы">
-                            </div>
-
-                            <div class="carousel-item">
-                                <img src="{{ url_for('static', filename='img/DT 990.png') }}" class="d-block w-100" alt="Наушники DT 990">
-                            </div>
-
-                            <div class="carousel-item">
-                                <img src="{{ url_for('static', filename='img/preampART.png') }}" class="d-block w-100" alt="Предусилитель ART">
-                            </div>
-                        </div>
-
-                        <button class="carousel-control-prev" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Назад</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Вперёд</span>
-                        </button>
-                    </div>
-
-                </div> {# Закрытие div.container внутри main #}
-
-                <div class="reviews">
-                    <h1 id="reviews">Отзывы</h1>
-                    <h5>Ваш комфорт - наш приоритет!</h5>
-
-                    </div>
-
-            </main> {# Закрытие main #}
-
-        {# Подвал сайта (общая часть) #}
-        <footer class="container">
-            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
-            <div class="footer-right">
-                {# Внешняя ссылка на Telegram (не требует url_for) #}
-                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
-                <div class="footer-links">
-                    {# Пути к изображениям соцсетей из static/img/ #}
-                    <a href="https://t.me/dopemusic_records" target="_blank">
-                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank">
-                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
-                    </a>
-                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank">
-                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
-                    </a>
+        {# Карусель оборудования #}
+        <div id="equipmentCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {# Пути к изображениям оборудования из static/img/ #}
+                <div class="carousel-item active">
+                    <img src="{{ url_for('static', filename='img/dt770 + mic.png') }}" class="d-block w-100" alt="Наушники и микрофон">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/UAD.png') }}" class="d-block w-100" alt="UAD звуковая карта">
+                </div>
+                 <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/YAMAHA HS7.png') }}" class="d-block w-100" alt="Мониторы">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/DT 990.png') }}" class="d-block w-100" alt="Наушники DT 990">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static', filename='img/preampART.png') }}" class="d-block w-100" alt="Предусилитель ART">
                 </div>
             </div>
-        </footer>
-    </div> {# Закрытие div.page #}
 
-    {# Подключение Bootstrap JS с CDN (не требует url_for) - должно быть один раз в конце body #}
-    {# Я удалил дублирующийся тег script, который был внутри карусели в вашем коде #}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <button class="carousel-control-prev" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Назад</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Вперёд</span>
+            </button>
+        </div>
+    </div> {# Закрытие div.equipment #}
 
-</body>
-</html>
+
+    <div class="reviews">
+        <h1 id="reviews">Отзывы</h1>
+        <h5>Ваш комфорт - наш приоритет!</h5>
+        {# ... Здесь будут отзывы ... #}
+    </div> {# Закрытие div.reviews #}
+
+
+{% endblock %}
+{# --- Конец блока content --- #}
+
+{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
+{# {% block extra_scripts %}
+    <script src="{{ url_for('static', filename='js/about_script.js') }}"></script>
+{% endblock %} #}

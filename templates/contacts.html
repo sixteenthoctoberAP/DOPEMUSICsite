@@ -1,111 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {# Подключение Bootstrap CSS с CDN (не требует url_for) #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {# Подключение вашего style.css из папки static/css/ #}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {# Заголовок страницы - исправлено на "Контакты" #}
-    <title>Контакты</title>
-</head>
-{# Класс body для страницы контактов #}
-<body class="page-contacts">
+{# contacts.html #}
+{# Указываем, что этот шаблон наследует от base.html #}
+{% extends 'base.html' %}
 
-    <div class="page">
+{# Переопределяем блок title для заголовка страницы #}
+{% block title %}Контакты{% endblock %}
 
-        {# Шапка сайта (общая часть) #}
-        <header class="container">
-            {# Ссылка на главную страницу с использованием url_for #}
-            <a href="{{ url_for('index') }}" class="logo">
-                {# Путь к изображению логотипа из static/img/ #}
-                <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
-            </a>
-            {# Основная навигация сайта #}
-            <nav>
-                <ul>
-                    {# Ссылки на другие страницы с использованием url_for #}
-                    <li><a href="{{ url_for('about') }}">О нас</a></li>
-                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
-                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
-                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
-                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
-                </ul>
-            </nav>
-        </header>
+{# Переопределяем блок body_class для специфичных стилей страницы #}
+{% block body_class %}page-contacts{% endblock %}
 
 
-        {# Вторая навигация (внутристраничные якоря) - не требует url_for #}
-        <div class="contacts navbar container">
-           <nav>
-                <ul>
-                    <li><a href="#contacts">Контакты</a></li> {# Якорь на раздел внутри этой же страницы #}
-                    <li><a href="#how-to-get">Как добраться?</a></li> {# Якорь на раздел внутри этой же страницы #}
-                </ul>
-            </nav>
-        </div>
+{# --- Переопределяем блок content для основного содержимого страницы --- #}
+{% block content %}
+    {# Уникальное содержимое страницы "Контакты" начинается здесь.
+       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
+       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом contacts.html.
+    #}
 
-        {# Основное содержимое страницы "Контакты" #}
-        <main class="container flex-grow-1">
+    {# Вторая навигация (внутристраничные якоря) - остается здесь, т.к. она уникальна для этой страницы #}
+    {# Убедитесь, что этот div находится внутри контейнера, если это необходимо по вашему дизайну #}
+    {# Если base.html уже предоставляет <div class="container"> внутри <main>, возможно, стоит убрать класс container отсюда #}
+    <div class="contacts navbar container">
+       <nav>
+            <ul>
+                <li><a href="#contacts">Контакты</a></li> {# Якорь на раздел внутри этой же страницы #}
+                <li><a href="#how-to-get">Как добраться?</a></li> {# Якорь на раздел внутри этой же страницы #}
+            </ul>
+        </nav>
+    </div>
 
-                <div class="container">
-                    <h1 id="contacts">Контакты</h1>
+    {# Основное содержимое страницы "Контакты" из вашего старого кода #}
+    {# Убедитесь, что все эти секции находятся внутри блока content #}
 
-                    <div class="contacts-info">
-                        <div class="contacts-row">
-                            <h4>Соц. сети</h4>
-                            <div class="contacts-info-social">
-                                {# Пути к изображениям соцсетей из static/img/ #}
-                                <a href="https://t.me/dopemusic_records" target="_blank"> {# Внешняя ссылка #}
-                                    <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
-                                </a>
-                                <a href="https://www.instagram.com/dopemusic.perm/" target="_blank"> {# Внешняя ссылка #}
-                                    <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
-                                </a>
-                                <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank"> {# Внешняя ссылка #}
-                                    <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
-                                </a>
-                            </div>
-                        </div>
+    <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
+        <h1 id="contacts">Контакты</h1>
 
-                        <div class="contacts-row">
-                            <h4>Телефон</h4>
-                            <h4 class="phone">+7 (919) 709-84-09</h4>
-                        </div>
-
-                        <div class="contacts-row">
-                            <h4>Адрес студии</h4>
-                            <h4 class="adres">Пермь, ул. Петропавловская, 40</h4>
-                        </div>
-                    </div>
-
-                    <h1 id="how-to-get">Как добраться?</h1>
-                    <div class="map-container">
-                        {# Код виджета карты от Яндекс. Не требует url_for, т.к. это внешний ресурс #}
-                        <div style="position:relative;overflow:hidden;">
-                            <a href="https://yandex.ru/maps/org/dope_music/183475169094/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Dope Music</a>
-                            <a href="https://yandex.ru/maps/50/perm/category/recording_studio/184105594/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:14px;">Студия звукозаписи в Перми</a>
-                            <iframe
-                                src="https://yandex.ru/map-widget/v1/?ll=56.239675%2C58.013182&mode=search&oid=183475169094&ol=biz&z=16.69&theme=dark"
-                                width="100%"
-                                height="400"
-                                frameborder="1"
-                                allowfullscreen="true"
-                                style="position:relative;">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-        </main>
-
-        {# Подвал сайта (общая часть) #}
-        <footer class="container">
-            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
-            <div class="footer-right">
-                {# Внешняя ссылка на Telegram (не требует url_for) #}
-                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
-                <div class="footer-links">
+        <div class="contacts-info">
+            <div class="contacts-row">
+                <h4>Соц. сети</h4>
+                <div class="contacts-info-social">
                     {# Пути к изображениям соцсетей из static/img/ #}
                     <a href="https://t.me/dopemusic_records" target="_blank"> {# Внешняя ссылка #}
                         <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
@@ -118,10 +50,40 @@
                     </a>
                 </div>
             </div>
-        </footer>
-    </div>
-    {# Подключение Bootstrap JS с CDN (не требует url_for) #}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-</body>
-</html>
+            <div class="contacts-row">
+                <h4>Телефон</h4>
+                <h4 class="phone">+7 (919) 709-84-09</h4>
+            </div>
+
+            <div class="contacts-row">
+                <h4>Адрес студии</h4>
+                <h4 class="adres">Пермь, ул. Петропавловская, 40</h4>
+            </div>
+        </div>
+
+        <h1 id="how-to-get">Как добраться?</h1>
+        <div class="map-container">
+            {# Код виджета карты от Яндекс. Не требует url_for, т.к. это внешний ресурс #}
+            <div style="position:relative;overflow:hidden;">
+                <a href="https://yandex.ru/maps/org/dope_music/183475169094/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Dope Music</a>
+                <a href="https://yandex.ru/maps/50/perm/category/recording_studio/184105594/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:14px;">Студия звукозаписи в Перми</a>
+                <iframe
+                    src="https://yandex.ru/map-widget/v1/?ll=56.239675%2C58.013182&mode=search&oid=183475169094&ol=biz&z=16.69&theme=dark"
+                    width="100%"
+                    height="400"
+                    frameborder="1"
+                    allowfullscreen="true"
+                    style="position:relative;">
+                </iframe>
+            </div>
+        </div>
+    </div> {# Закрытие div.container #}
+
+{% endblock %}
+{# --- Конец блока content --- #}
+
+{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
+{# {% block extra_scripts %}
+    <script src="{{ url_for('static', filename='js/contacts_script.js') }}"></script>
+{% endblock %} #}
