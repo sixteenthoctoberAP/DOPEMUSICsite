@@ -262,16 +262,7 @@ h4{
     margin: 0;
 }
 
-.pricelist{
-    width: 760px;
-    height: 760px; /* Возможно, стоит использовать max-height вместо фиксированной height */
-    object-fit: contain;
-    max-width: 100%; /* Хорошее свойство для адаптивности */
-    display: block;
-    margin: 0 auto;
-    margin-top: 32px;
-    border: 3px solid #ffffff;
-}
+
 
 .contacts-info h4{
     font-size: 25px;
@@ -677,4 +668,24 @@ h4{
 .btn-primary:focus,
 .btn-primary:active {
      color: var(--bs-btn-hover-color);
+}
+
+.post-image{
+    width: 760px;
+    height: 760px; /* Возможно, стоит использовать max-height вместо фиксированной height */
+    object-fit: contain;
+    max-width: 100%; /* Хорошее свойство для адаптивности */
+    display: block;
+    margin: 0 auto;
+    margin-top: 32px;
+    border: 3px solid #ffffff;
+}
+
+
+.posts-list h2{
+    padding-top: 0px;
+}
+
+.posts-list small{
+    font-size: 12.8px;
 }

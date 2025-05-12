@@ -2,10 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import os # Импорт для работы с файловой системой
-from werkzeug.utils import secure_filename # Импорт для безопасного получения имени файла
-import uuid # Импорт для генерации уникальных идентификаторов
+import os
+from werkzeug.utils import secure_filename
+import uuid
 from datetime import datetime # Импорт для работы с датой и временем
+import pytz # Импорт для работы с часовыми поясами
 
 # Создание экземпляра приложения Flask
 app = Flask(__name__)
@@ -80,7 +81,7 @@ class Post(db.Model):
     text = db.Column(db.Text, nullable=False) # Текст поста, обязательное (тип Text для длинного текста)
     # Поле для хранения имени файла изображения. Может быть NULL, так как изображение необязательно.
     image_filename = db.Column(db.String(100), nullable=True)
-    # Поле для даты и времени создания поста. Устанавливается автоматически при создании записи.
+    # Поле для даты и времени создания поста. Устанавливается автоматически при создании записи. Храним в UTC.
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     # Опционально: user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     # Опционально: author = db.relationship('User', backref=db.backref('posts', lazy=True))
@@ -97,6 +98,48 @@ class Post(db.Model):
 def load_user(user_id):
     # Возвращает объект пользователя или None, если пользователь не найден.
     return User.query.get(int(user_id))
+
+
+# --- Пользовательский фильтр Jinja2 для форматирования даты/времени с учетом часового пояса ---
+@app.template_filter('format_datetime_timezone')
+def format_datetime_timezone(value, timezone_name='UTC', format='%Y-%m-%d %H:%M'):
+    """
+    Форматирует объект datetime в указанный часовой пояс и строку.
+    Args:
+        value (datetime): Объект datetime (предполагается UTC).
+        timezone_name (str): Имя целевого часового пояса (например, 'Asia/Yekaterinburg').
+        format (str): Строка формата для strftime.
+    Returns:
+        str: Отформатированная строка даты/времени.
+    """
+    if value is None:
+        return ""
+
+    # Убеждаемся, что исходное время является timezone-aware (с указанием часового пояса),
+    # приписывая ему UTC, если оно naive (без указания пояса).
+    # SQLAlchemy обычно возвращает naive datetime, но они по умолчанию в UTC, если default=datetime.utcnow.
+    # Лучше явно указать UTC.
+    utc_timezone = pytz.timezone('UTC')
+    if value.tzinfo is None:
+        utc_dt = utc_timezone.localize(value)
+    else:
+         utc_dt = value.astimezone(utc_timezone)
+
+
+    try:
+        # Получаем целевой часовой пояс по имени
+        target_timezone = pytz.timezone(timezone_name)
+        # Преобразуем UTC время в целевой часовой пояс
+        target_dt = utc_dt.astimezone(target_timezone)
+        # Форматируем дату и время
+        return target_dt.strftime(format)
+    except pytz.UnknownTimeZoneError:
+        # Если указано неверное имя часового пояса, возвращаем исходное UTC время в формате
+        return utc_dt.strftime(format)
+    except Exception as e:
+        # Обработка других возможных ошибок форматирования
+        return f"Ошибка форматирования даты: {e}"
+
 
 # --- Ваши существующие маршруты ---
 
@@ -123,7 +166,8 @@ def contacts():
 # --- Маршрут для страницы "Медиа" (отображение постов) ---
 @app.route('/media')
 def media():
-    # Получаем все посты из базы данных, сортируя их по дате создания в убывающем порядке.
+    # Получаем все посты из базы данных, сортируя их по дате создания в убывающем порядке (по UTC).
+    # Сортировка по UTC корректна, даже если отображаем в другом поясе.
     all_posts = Post.query.order_by(Post.created_at.desc()).all()
     # Передаем список постов в шаблон media.html
     return render_template('media.html', posts=all_posts)
