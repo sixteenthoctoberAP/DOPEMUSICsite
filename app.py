@@ -1,12 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, abort # Импортируем abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from werkzeug.utils import secure_filename
 import uuid
-from datetime import datetime # Импорт для работы с датой и временем
-import pytz # Импорт для работы с часовыми поясами
+from datetime import datetime
+import pytz
 
 # Создание экземпляра приложения Flask
 app = Flask(__name__)
@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dope_music.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Установка секретного ключа для безопасности сессий и flash-сообщений.
 # Получаем из переменной окружения или используем заглушку (ОЧЕНЬ ВАЖНО ЗАМЕНИТЬ НА НАДЕЖНЫЙ КЛЮЧ!)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'ВАШ_ОЧЕНЬ_НАДЕЖНЫЙ_И_СЛУЧАЙНЫЙ_СЕКРЕТНЫЙ_КЛЮЧ'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'ВАШ_ОЧЕНЬ_НАДЕЖНЫЙ_И_СЛУЧАЙНЫЙ_СЕКРЕТНЫЙ_КЛЮЧ' # <-- Замените это!
 
 # --- Конфигурация для загрузки файлов ---
 # Папка, куда будут сохраняться загруженные изображения. Находится внутри папки 'static'.
@@ -115,10 +115,6 @@ def format_datetime_timezone(value, timezone_name='UTC', format='%Y-%m-%d %H:%M'
     if value is None:
         return ""
 
-    # Убеждаемся, что исходное время является timezone-aware (с указанием часового пояса),
-    # приписывая ему UTC, если оно naive (без указания пояса).
-    # SQLAlchemy обычно возвращает naive datetime, но они по умолчанию в UTC, если default=datetime.utcnow.
-    # Лучше явно указать UTC.
     utc_timezone = pytz.timezone('UTC')
     if value.tzinfo is None:
         utc_dt = utc_timezone.localize(value)
@@ -294,8 +290,108 @@ def create():
             return render_template('create.html', title=title, text=text)
 
     # Обработка GET запроса (просто отображение страницы создания поста)
+    # --- ИСПРАВЛЕННЫЙ ОТСТУП ЭТОГО БЛОКА ---
     else:
         return render_template('create.html')
+
+# --- НОВЫЙ МАРШРУТ ДЛЯ РЕДАКТИРОВАНИЯ ПОСТА ---
+# Принимает ID поста в URL
+@app.route('/edit/<int:post_id>', methods=['GET', 'POST'])
+@login_required # Только авторизованные пользователи могут редактировать
+def edit(post_id):
+    # Ищем пост по ID. Если не найден, возвращаем ошибку 404.
+    post = Post.query.get_or_404(post_id)
+
+    # Опционально: Добавить проверку, является ли текущий пользователь автором поста, если вы добавили user_id в модель Post
+    # if post.user_id != current_user.id:
+    #    abort(403) # Запрещено
+
+    if request.method == 'POST':
+        # Получаем обновленные данные из формы
+        post.title = request.form.get('title')
+        post.text = request.form.get('text')
+        image = request.files.get('image') # Получаем новый файл изображения
+
+        # Обработка нового загруженного изображения (если оно есть)
+        if image and image.filename:
+            if allowed_file(image.filename):
+                original_filename = secure_filename(image.filename)
+                unique_filename = str(uuid.uuid4()) + '_' + original_filename
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+                try:
+                    # Удаляем старое изображение, если оно было
+                    if post.image_filename:
+                        old_filepath = os.path.join(app.config['UPLOAD_FOLDER'], post.image_filename)
+                        if os.path.exists(old_filepath):
+                            os.remove(old_filepath)
+                    image.save(filepath)  # Сохраняем новый файл
+                    post.image_filename = unique_filename  # Обновляем имя файла в посте
+                except Exception as e:
+                    flash(f'Ошибка при сохранении нового файла изображения: {e}', 'danger')
+            else:
+                flash('Недопустимый формат файла изображения! Разрешены только PNG, JPG, JPEG, GIF.', 'warning')
+
+        # Простая валидация обновленных данных
+        if not post.title or not post.text:
+            flash('Заголовок и текст записи не могут быть пустыми!', 'warning')
+            # Возвращаем форму редактирования с текущими данными поста и сообщением об ошибке
+            return render_template('edit.html', post=post)
+
+
+        try:
+            # Сохраняем изменения в базе данных. SQLAlchemy отслеживает изменения в объекте 'post'.
+            db.session.commit()
+            flash('Запись успешно обновлена!', 'success')
+            # Перенаправляем на страницу медиа после успешного обновления
+            return redirect(url_for('media'))
+
+        except Exception as e:
+            db.session.rollback() # Откатываем изменения при ошибке
+            flash(f'При обновлении записи произошла ошибка: {e}', 'danger')
+            # Возвращаем форму редактирования с текущими данными поста и сообщением об ошибке
+            return render_template('edit.html', post=post)
+
+    # Обработка GET запроса (отображение формы редактирования)
+    # --- ИСПРАВЛЕННЫЙ ОТСТУП ЭТОГО БЛОКА ---
+    else:
+        # Передаем объект поста в шаблон edit.html для предзаполнения формы
+        return render_template('edit.html', post=post)
+
+
+# --- НОВЫЙ МАРШРУТ ДЛЯ УДАЛЕНИЯ ПОСТА ---
+# Принимает ID поста в URL. Принимает только POST запросы для безопасности.
+@app.route('/delete/<int:post_id>', methods=['POST'])
+@login_required # Только авторизованные пользователи могут удалять
+def delete(post_id):
+    # Ищем пост по ID. Если не найден, возвращаем ошибку 404.
+    post = Post.query.get_or_404(post_id)
+
+    # Опционально: Добавить проверку, является ли текущий пользователь автором поста
+    # if post.user_id != current_user.id:
+    #    abort(403) # Запрещено
+
+    try:
+        # Удаляем связанное изображение с диска, если оно существует
+        if post.image_filename:
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], post.image_filename)
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                flash(f'Изображение "{post.image_filename}" удалено.', 'info')
+
+
+        # Удаляем пост из сессии базы данных
+        db.session.delete(post)
+        # Сохраняем изменения (фиксируем удаление)
+        db.session.commit()
+        flash('Запись успешно удалена!', 'success')
+        # Перенаправляем на страницу медиа после удаления
+        return redirect(url_for('media'))
+
+    except Exception as e:
+        db.session.rollback() # Откатываем изменения при ошибке
+        flash(f'При удалении записи произошла ошибка: {e}', 'danger')
+        # При ошибке удаления, возвращаемся на страницу медиа
+        return redirect(url_for('media'))
 
 
 # --- Маршрут для регистрации (опционально) ---

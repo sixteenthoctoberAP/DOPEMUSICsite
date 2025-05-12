@@ -88,7 +88,15 @@
                             <div class="post-item mt-4" style="border: 3px solid #eee; padding: 20px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.05);"> {# Пример стилизации блока поста #}
                                 <h3>{{ post.title }}</h3> {# Заголовок поста #}
 
-                                <h5>{{ post.text }}</h5> {# Текст поста #}
+                                {# --- Отображаем изображение, если оно есть --- #}
+                                {% if post.image_filename %} {# Проверяем, сохранено ли имя файла изображения для этого поста #}
+                                    {# Генерируем URL к изображению, используя url_for('static', ...) #}
+                                    {# Путь будет: static/post_images/имя_файла_изображения #}
+                                    <img src="{{ url_for('static', filename='post_images/' + post.image_filename) }}" alt="Изображение к посту" class="post-image"> {# Используем класс .post-image из style.css #}
+                                {% endif %}
+                                {# --- Конец отображения изображения --- #}
+
+                                <p>{{ post.text }}</p> {# Текст поста #}
 
                                 {# --- Отображаем дату и время создания в UTC+5 --- #}
                                 {# Используем пользовательский фильтр format_datetime_timezone #}
@@ -98,16 +106,20 @@
                                 {# --- Конец отображения даты --- #}
 
                                 {# Если добавили автора: <small>Опубликовано: {{ post.author.username }}</small> #}
-                                {# --- Отображаем изображение, если оно есть --- #}
-                                {% if post.image_filename %} {# Проверяем, сохранено ли имя файла изображения для этого поста #}
-                                    {# Генерируем URL к изображению, используя url_for('static', ...) #}
-                                    {# Путь будет: static/post_images/имя_файла_изображения #}
-                                    <img src="{{ url_for('static', filename='post_images/' + post.image_filename) }}" alt="Изображение к посту" class="post-image"> {# Используем класс .post-image из style.css #}
+
+                                {# --- Кнопки Редактировать и Удалить (видны только авторизованным) --- #}
+                                {% if current_user.is_authenticated %}
+                                    <div class="post-actions mt-3"> {# Добавляем небольшой отступ сверху #}
+                                        {# Ссылка на страницу редактирования #}
+                                        <a href="{{ url_for('edit', post_id=post.id) }}" class="btn btn-secondary btn-sm me-2">Редактировать</a> {# Используем классы Bootstrap для кнопок #}
+
+                                        {# Форма для удаления (отправляет POST запрос) #}
+                                        <form action="{{ url_for('delete', post_id=post.id) }}" method="POST" style="display:inline;"> {# display:inline; чтобы форма не переносилась на новую строку #}
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить эту запись?');">Удалить</button> {# Добавляем подтверждение удаления #}
+                                        </form>
+                                    </div>
                                 {% endif %}
-                                {# --- Конец отображения изображения --- #}
-
-
-
+                                {# --- Конец кнопок действий --- #}
 
                             </div>
                         {% endfor %}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# Подключение Bootstrap CSS с CDN #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {# Подключение вашего style.css из папки static/css/ #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+     {# Подключение favicon из папки static/ #}
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    {# Заголовок страницы #}
+    <title>Редактировать запись</title> {# Заголовок страницы #}
+</head>
+{# Класс body для страницы редактирования #}
+<body class="page-edit"> {# Добавляем класс для body #}
+    <div class="page">
+
+        {# Шапка сайта (повторяется на всех страницах) #}
+        <header class="container">
+            {# Ссылка на главную страницу с использованием url_for #}
+            <a href="{{ url_for('index') }}" class="logo">
+                {# Путь к изображению логотипа из static/img/ #}
+                <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
+            </a>
+            {# Основная навигация сайта #}
+            <nav>
+                <ul>
+                    {# Ссылки на другие страницы с использованием url_for #}
+                    <li><a href="{{ url_for('about') }}">О нас</a></li>
+                    <li><a href="{{ url_for('services') }}">Услуги</a></li>
+                    <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
+                    <li><a href="{{ url_for('media') }}">Медиа</a></li>
+                    <li><a href="{{ url_for('label') }}">Лейбл</a></li>
+                    {# Ссылки Входа/Выхода/Профиля в зависимости от статуса пользователя #}
+                    {% if current_user.is_authenticated %}
+                        {# Пользователь авторизован #}
+                        {# Опционально: ссылка на профиль пользователя #}
+                        {# <li><a href="{{ url_for('profile') }}">Привет, {{ current_user.username }}</a></li> #}
+                        <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+                    {% else %}
+                        {# Пользователь не авторизован #}
+                        <li><a href="{{ url_for('login') }}">Войти</a></li>
+                        {# Опционально: ссылка на регистрацию #}
+                        {# <li><a href="{{ url_for('register') }}">Регистрация</a></li> #}
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+
+        {# Место для отображения flash сообщений #}
+        <div class="container mt-3">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {# Основное содержимое страницы - форма редактирования поста #}
+        <main class="container flex-grow-1">
+            <div class="container">
+                {# Заголовок страницы с ID поста #}
+                <h1>Редактировать запись #{{ post.id }}</h1>
+
+                {# --- Форма редактирования поста --- #}
+                {# Форма отправляется на маршрут 'edit' с ID поста методом POST #}
+                {# Важно: добавьте enctype="multipart/form-data" для загрузки файлов #}
+                <form method="post" enctype="multipart/form-data" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05);border-radius: 0; border: 3px solid #eee;">
+                    <div class="mb-3">
+                        <label for="titleInput" class="form-label" style="color: #fff;">Заголовок</label>
+                        {# Поле ввода заголовка, предзаполненное текущим заголовком поста #}
+                        <input type="text" name="title" id="titleInput" placeholder="Введите заголовок статьи" class="form-control" value="{{ post.title }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="textInput" class="form-label" style="color: #fff;">Текст записи</label>
+                        {# Поле ввода текста, предзаполненное текущим текстом поста #}
+                        <textarea name="text" id="textInput" placeholder="Введите текст записи" class="form-control" rows="10" required>{{ post.text }}</textarea>
+                    </div>
+
+                    {# --- Поле для загрузки нового изображения (необязательно) --- #}
+                    <div class="mb-3">
+                        <label for="imageInput" class="form-label" style="color: #fff;">Новое изображение (необязательно)</label>
+                        <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
+                        {# Опционально: показать текущее изображение, если оно есть #}
+                        {% if post.image_filename %}
+                            <small class="form-text" style="color: #ccc; opacity: 0.7;">Текущее изображение:</small>
+                            <img src="{{ url_for('static', filename='post_images/' + post.image_filename) }}" alt="Текущее изображение" style="max-width: 200px; height: auto; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                            {# Опционально: добавить чекбокс для удаления текущего изображения без загрузки нового #}
+                            {# <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" value="delete" id="deleteImageCheck" name="delete_image">
+                                <label class="form-check-label" for="deleteImageCheck" style="color: #fff;">
+                                    Удалить текущее изображение
+                                </label>
+                            </div> #}
+                        {% endif %}
+                    </div>
+                    {# --- Конец поля нового изображения --- #}
+
+                    {# Кнопка отправки формы #}
+                    <button class="btn btn-primary" type="submit">Сохранить изменения</button>
+                    {# Ссылка для отмены (возврат на страницу медиа) #}
+                     <a href="{{ url_for('media') }}" class="btn btn-secondary">Отмена</a>
+
+                </form>
+                 {# --- Конец формы --- #}
+            </div>
+        </main>
+
+        {# Подвал сайта (повторяется на всех страницах) #}
+        <footer class="container">
+            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
+            <div class="footer-right">
+                <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
+                <div class="footer-links">
+                    <a href="https://t.me/dopemusic_records" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Tg.svg') }}" alt="logo">
+                    </a>
+                    <a href="https://www.instagram.com/dopemusic.perm/" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Inst.svg') }}" alt="logo">
+                    </a>
+                    <a href="https://vk.com/dopemusicrecords?from=groups" target="_blank">
+                        <img src="{{ url_for('static', filename='img/Vk.svg') }}" alt="logo">
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    {# Подключение Bootstrap JS с CDN #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {# Если на этой странице есть специфичные скрипты, подключите их здесь с url_for #}
+    {# <script src="{{ url_for('static', filename='js/edit_script.js') }}"></script> #}
+
+</body>
+</html>
