@@ -1,25 +1,13 @@
 {# index.html #}
-{# Указываем, что этот шаблон наследует от base.html #}
 {% extends 'base.html' %}
 
-{# Переопределяем блок title для заголовка страницы #}
 {% block title %}DOPE MUSIC{% endblock %}
 
-{# Переопределяем блок body_class для специфичных стилей страницы #}
 {% block body_class %}page-index{% endblock %}
 
-
-{# --- Переопределяем блок content для основного содержимого страницы --- #}
 {% block content %}
-    {# Уникальное содержимое главной страницы начинается здесь.
-       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
-       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом index.html.
-    #}
 
     <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
-
-        {# Карусель на главной странице #}
-        {# Убедитесь, что стили для карусели (height, width, float, margin) в вашем style.css #}
         <div id="equipmentCarousel" class="carousel slide mt-4" data-bs-ride="carousel" style="height: 500px; margin: 0 auto !important; float: right;">
              {# Внимание: inline стили для ширины/высоты карусели и float/margin лучше перенести в style.css для класса, например, .main-carousel #}
              {# Пример: <div id="equipmentCarousel" class="carousel slide mt-4 main-carousel" data-bs-ride="carousel"> #}
@@ -39,7 +27,6 @@
                 <div class="carousel-item">
                     <img src="{{ url_for('static', filename='img/9.png') }}" class="d-block w-100 h-100" style="object-fit: cover;" alt="studio2">
                 </div>
-
             </div>
 
             <button class="carousel-control-prev" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="prev">
@@ -52,19 +39,8 @@
             </button>
         </div>
 
-        {# Заголовки и кнопка #}
         <h1>Dope Music</h1>
         <h2>Первая многофункциональная <br> студия звукозаписи в Перми  </h2>
-
-        {# Внешняя ссылка на Telegram (не требует url_for) #}
         <a class="mainknopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
-
-    </div> {# Закрытие div.container #}
-
+    </div>
 {% endblock %}
-{# --- Конец блока content --- #}
-
-{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
-{# {% block extra_scripts %}
-    <script src="{{ url_for('static', filename='js/index_script.js') }}"></script>
-{% endblock %} #}
