@@ -1,25 +1,12 @@
 {# about.html #}
-
 {% extends 'base.html' %}
 
 {% block title %}О нас{% endblock %}
 
-{# Переопределяем блок body_class для специфичных стилей страницы (если нужен) #}
-{# Если у вас есть класс body для страницы О нас, добавьте его сюда #}
 {% block body_class %}page-about{% endblock %}
-{# Если специфичный класс body не нужен, этот блок можно удалить или оставить пустым #}
 
-
-{# --- Переопределяем блок content для основного содержимого страницы --- #}
 {% block content %}
-    {# Уникальное содержимое страницы "О нас" начинается здесь.
-       Теги <main> и <div class="container"> из base.html уже предоставлены.
-       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом about.html.
-    #}
 
-    {# Вторая навигация (внутристраничные якоря) - остается здесь, т.к. она уникальна для этой страницы #}
-    {# Убедитесь, что этот div находится внутри контейнера, если это необходимо по вашему дизайну #}
-    {# Если base.html уже предоставляет <div class="container"> внутри <main>, возможно, стоит убрать класс container отсюда #}
     <div class="navbar container">
         <nav>
             <ul>
@@ -31,9 +18,6 @@
         </nav>
     </div>
 
-    {# Основное содержимое страницы "О нас" из вашего старого кода #}
-    {# Убедитесь, что все эти секции находятся внутри блока content #}
-
     <h1 id="about">О нас</h1>
     <h2>Студия звукозаписи Dope Music</h2>
     <h5>Мы предлагаем комфортные условия для музыкантов и специалистов звукозаписи любого уровня — от начинающих артистов до опытных профессионалов. Нашей ключевой особенностью является доступная аренда современной оборудованной студии для решения любых творческих задач.</h5>
@@ -42,7 +26,7 @@
 
     <div class="team">
         <h1 id="team">Команда</h1>
-        {# Изображения команды из static/img/ #}
+
         <div class="team-info">
             <img src="{{ url_for('static', filename='img/travis.jpg') }}" alt="team">
             <h5>Денис (Luvcartier)</h5>
@@ -106,8 +90,7 @@
                 <span class="visually-hidden">Вперёд</span>
             </button>
         </div>
-    </div> {# Закрытие div.equipment #}
-
+    </div>
 
     <div class="reviews">
         <h1 id="reviews">Отзывы</h1>
@@ -119,14 +102,6 @@
         <a href="https://www.avito.ru/brands/8990c5f8ea42953da6e8c0a37b8c39ba/all?gdlkerfdnwq=101&page_from=from_item_card&iid=3491209413&sellerId=93f57b0a891d8d31b71c49deba404f57" target="_blank">
             <img src="{{ url_for('static', filename='img/avito.svg') }}" alt="logo">
         </a></div>
-
-    </div> {# Закрытие div.reviews #}
-
-
+    </div>
 {% endblock %}
 {# --- Конец блока content --- #}
-
-{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
-{# {% block extra_scripts %}
-    <script src="{{ url_for('static', filename='js/about_script.js') }}"></script>
-{% endblock %} #}
