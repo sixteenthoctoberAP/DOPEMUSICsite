@@ -314,6 +314,24 @@ def edit(post_id):
         post.text = request.form.get('text')
         image = request.files.get('image') # Получаем новый файл изображения
 
+        # Проверяем, был ли установлен чекбокс "Удалить текущее изображение"
+        delete_image_checked = request.form.get('delete_image') is not None
+
+        # Если чекбокс установлен И у поста есть текущее изображение
+        if delete_image_checked and post.image_filename:
+            try:
+                # Формируем полный путь к файлу изображения
+                old_filepath = os.path.join(app.config['UPLOAD_FOLDER'], post.image_filename)
+                # Проверяем, существует ли файл перед удалением
+                if os.path.exists(old_filepath):
+                    os.remove(old_filepath)  # Удаляем файл с диска
+                    flash(f'Старое изображение "{post.image_filename}" удалено.', 'info')
+                post.image_filename = None  # Очищаем поле в базе данных
+
+            except Exception as e:
+                flash(f'Ошибка при удалении старого файла изображения: {e}', 'danger')
+                # Если удаление файла не удалось, image_filename остается прежним в объекте post
+
         # Обработка нового загруженного изображения (если оно есть)
         if image and image.filename:
             if allowed_file(image.filename):

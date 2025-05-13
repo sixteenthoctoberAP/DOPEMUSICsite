@@ -581,9 +581,10 @@ display: block;
 }
 
 .post-image{
-    width: 760px;
-    /*height: 760px; !* Возможно, стоит использовать max-height вместо фиксированной height *!*/
+    /*width: 760px;*/
     max-height: 760px;
+
+
     object-fit: contain;
     max-width: 100%; /* Хорошее свойство для адаптивности */
     display: block;

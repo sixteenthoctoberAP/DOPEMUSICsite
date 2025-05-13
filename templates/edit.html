@@ -1,22 +1,13 @@
 {# edit.html #}
-{# Указываем, что этот шаблон наследует от base.html #}
 {% extends 'base.html' %}
 
-{# Переопределяем блок title для заголовка страницы #}
 {% block title %}Редактировать запись{% endblock %}
 
-{# Переопределяем блок body_class для специфичных стилей страницы #}
 {% block body_class %}page-edit{% endblock %}
 
-
-{# --- Переопределяем блок content для основного содержимого страницы --- #}
 {% block content %}
-    {# Уникальное содержимое страницы "Редактировать запись" начинается здесь.
-       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
-       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом edit.html.
-    #}
 
-    <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
+    <div class="container">
         {# Заголовок страницы с ID поста #}
         <h1>Редактировать запись #{{ post.id }}</h1>
 
@@ -35,39 +26,29 @@
                 <textarea name="text" id="textInput" placeholder="Введите текст записи" class="form-control" rows="10" required>{{ post.text }}</textarea>
             </div>
 
-            {# --- Поле для загрузки нового изображения (необязательно) --- #}
+            {# --- Поле для загрузки нового изображения --- #}
             <div class="mb-3">
                 <label for="imageInput" class="form-label" style="color: #fff;">Новое изображение (необязательно)</label>
                 <input type="file" name="image" id="imageInput" class="form-control" accept="image/*">
-                {# Опционально: показать текущее изображение, если оно есть #}
+                {# Показать текущее изображение, если оно есть #}
                 {% if post.image_filename %}
                     <small class="form-text" style="color: #ccc; opacity: 0.7;">Текущее изображение:</small>
                     <img src="{{ url_for('static', filename='post_images/' + post.image_filename) }}" alt="Текущее изображение" style="max-width: 200px; height: auto; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px;">
-                    {# Опционально: добавить чекбокс для удаления текущего изображения без загрузки нового #}
-                    {# <div class="form-check mt-2">
+                    {# Чекбокс для удаления текущего изображения без загрузки нового #}
+                    <div class="form-check mt-2">
                         <input class="form-check-input" type="checkbox" value="delete" id="deleteImageCheck" name="delete_image">
                         <label class="form-check-label" for="deleteImageCheck" style="color: #fff;">
                             Удалить текущее изображение
                         </label>
-                    </div> #}
+                    </div>
                 {% endif %}
             </div>
-            {# --- Конец поля нового изображения --- #}
 
             {# Кнопка отправки формы #}
             <button class="btn btn-primary" type="submit">Сохранить изменения</button>
             {# Ссылка для отмены (возврат на страницу медиа) #}
              <a href="{{ url_for('media') }}" class="btn btn-secondary">Отмена</a>
-
         </form>
-         {# --- Конец формы --- #}
-    </div> {# Закрытие div.container #}
-
-
+    </div>
 {% endblock %}
-{# --- Конец блока content --- #}
 
-{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
-{# {% block extra_scripts %}
-    <script src="{{ url_for('static', filename='js/edit_script.js') }}"></script>
-{% endblock %} #}
