@@ -1,20 +1,12 @@
 {# login.html #}
-{# Указываем, что этот шаблон наследует от base.html #}
 {% extends 'base.html' %}
 
-{# Переопределяем блок title для заголовка страницы #}
 {% block title %}Вход{% endblock %}
 
-{# Переопределяем блок body_class для специфичных стилей страницы #}
 {% block body_class %}page-login{% endblock %}
 
 
-{# --- Переопределяем блок content для основного содержимого страницы --- #}
 {% block content %}
-    {# Уникальное содержимое страницы "Вход" начинается здесь.
-       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
-       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом login.html.
-    #}
 
     <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
         <h1>Вход</h1>
@@ -32,24 +24,15 @@
                 <input type="password" name="password" id="passwordInput" placeholder="Введите пароль" class="form-control" required>
             </div>
 
-            {# Опционально: Чекбокс "Запомнить меня" #}
-            {# <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="rememberMeCheck" name="remember">
-                <label class="form-check-label" for="rememberMeCheck" style="color: #fff;">Запомнить меня</label>
-            </div> #}
-
+<!--            {# Опционально: Чекбокс "Запомнить меня" #}-->
+<!--            {# <div class="mb-3 form-check">-->
+<!--                <input type="checkbox" class="form-check-input" id="rememberMeCheck" name="remember">-->
+<!--                <label class="form-check-label" for="rememberMeCheck" style="color: #fff;">Запомнить меня</label>-->
+<!--            </div> #}-->
             <button class="btn btn-primary" type="submit">Войти</button>
 
-            {# Ссылка на страницу регистрации (если она будет реализована) #}
-            {# <p class="mt-3" style="color: #fff;">Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p> #}
+<!--            {# Ссылка на страницу регистрации (если она будет реализована) #}-->
+<!--            {# <p class="mt-3" style="color: #fff;">Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p> #}-->
         </form>
-    </div> {# Закрытие div.container #}
-
-
+    </div>
 {% endblock %}
-{# --- Конец блока content --- #}
-
-{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
-{# {% block extra_scripts %}
-    <script src="{{ url_for('static', filename='js/login_script.js') }}"></script>
-{% endblock %} #}
