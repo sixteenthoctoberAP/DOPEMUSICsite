@@ -1,37 +1,29 @@
 {# media.html #}
-{# Указываем, что этот шаблон наследует от base.html #}
 {% extends 'base.html' %}
 
-{# Переопределяем блок title для заголовка страницы #}
 {% block title %}Медиа{% endblock %}
 
-{# Переопределяем блок body_class для специфичных стилей страницы #}
 {% block body_class %}page-media{% endblock %}
 
-{# --- Переопределяем блок content для основного содержимого страницы --- #}
 {% block content %}
-    <div class="container"> {# Оставляем контейнер, если он нужен для центрирования/отступов основного контента #}
+    <div class="container">
         <div class="title-container">
              {# Ссылка "Создать запись" видна ТОЛЬКО авторизованным пользователям #}
             {% if current_user.is_authenticated %}
-                {# Используем url_for для перехода на страницу создания поста #}
                 <a class="on-page" href="{{ url_for('create') }}">Создать запись</a>
             {% endif %}
             <h1>Медиа</h1>
         </div>
 
-        {# Здесь был другой контент страницы Медиа, если он есть #}
-        {# ... ваш другой контент Медиа ... #}
-
         {# --- Список постов из базы данных --- #}
         <div class="posts-list mt-5"> {# Добавим отступ сверху #}
-            <h2>Наши записи</h2> {# Заголовок для списка постов #}
+            <h2>Наши записи</h2>
 
             {% if posts %} {# Проверяем, есть ли посты для отображения #}
                 {% for post in posts %}
-                    <div class="post-item mt-4" style="border: 3px solid #eee; padding: 20px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.05);"> {# Пример стилизации блока поста #}
-                        <h3>{{ post.title }}</h3> {# Заголовок поста #}
-                            <h5>{{ post.text }}</h5> {# Текст поста #}
+                    <div class="post-item mt-4" style="border: 3px solid #eee; padding: 20px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.05);">
+                        <h3>{{ post.title }}</h3>
+                            <h5>{{ post.text }}</h5>
 
                          {# --- Отображаем дату и время создания в UTC+5 --- #}
                         {# Используем пользовательский фильтр format_datetime_timezone #}
@@ -40,7 +32,7 @@
                         </small>
                         {# --- Конец отображения даты --- #}
 
-                        {# Если добавили автора: <small>Опубликовано: {{ post.author.username }}</small> #}
+                        {# Если будет добавили автор поста: <small>Опубликовано: {{ post.author.username }}</small> #}
 
                         {# --- Отображаем изображение, если оно есть --- #}
                         {% if post.image_filename %} {# Проверяем, сохранено ли имя файла изображения для этого поста #}
@@ -48,9 +40,6 @@
                             {# Путь будет: static/post_images/имя_файла_изображения #}
                             <img src="{{ url_for('static', filename='post_images/' + post.image_filename) }}" alt="Изображение к посту" class="post-image"> {# Используем класс .post-image из style.css #}
                         {% endif %}
-                        {# --- Конец отображения изображения --- #}
-
-
 
                         {# --- Кнопки Редактировать и Удалить (видны только авторизованным) --- #}
                         {% if current_user.is_authenticated %}
@@ -60,25 +49,16 @@
 
                                 {# Форма для удаления (отправляет POST запрос) #}
                                 <form action="{{ url_for('delete', post_id=post.id) }}" method="POST" style="display:inline;"> {# display:inline; чтобы форма не переносилась на новую строку #}
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить эту запись?');">Удалить</button> {# Добавляем подтверждение удаления #}
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить эту запись?');">Удалить</button> {# Подтверждение удаления #}
                                 </form>
                             </div>
                         {% endif %}
-                        {# --- Конец кнопок действий --- #}
-
                     </div>
                 {% endfor %}
+
             {% else %} {# Если постов пока нет #}
-                <p style="color: #fff; opacity: 0.8;">Пока нет опубликованных записей.</p> {# Добавил стили для видимости текста #}
+                <p style="color: #fff; opacity: 0.8;">Пока нет опубликованных записей.</p>
             {% endif %}
         </div>
-        {# --- Конец списка постов --- #}
-
-    </div> {# Закрытие контейнера #}
+    </div>
 {% endblock %}
-{# --- Конец блока content --- #}
-
-{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
-{# {% block extra_scripts %}
-    <script src="{{ url_for('static', filename='js/media_script.js') }}"></script>
-{% endblock %} #}
