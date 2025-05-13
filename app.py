@@ -137,10 +137,12 @@ def format_datetime_timezone(value, timezone_name='UTC', format='%Y-%m-%d %H:%M'
         return f"Ошибка форматирования даты: {e}"
 
 
-# --- Ваши существующие маршруты ---
+# --- Маршруты ---
 
 # Маршрут для главной страницы
+@app.route('/index')
 @app.route('/')
+
 def index():
     return render_template('index.html')
 
