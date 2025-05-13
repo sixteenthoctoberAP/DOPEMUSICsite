@@ -1,3 +1,4 @@
+{# create.html #}
 {% extends 'base.html' %}
 
 {% block title %}Создать запись{% endblock %}
@@ -10,7 +11,6 @@
         <h1>Добавление записи</h1>
 
         {# --- Форма создания поста --- #}
-
         <form method="post" enctype="multipart/form-data" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05);border-radius: 0; border: 3px solid #eee;">
             <div class="mb-3">
                 <label for="titleInput" class="form-label" style="color: #fff;">Заголовок</label>
@@ -31,8 +31,6 @@
 
             <button class="btn btn-primary" type="submit">Добавить запись</button>
         </form>
-         {# --- Конец формы --- #}
-    </div> {# Закрытие div.container #}
-
+    </div>
 {% endblock %}
 
