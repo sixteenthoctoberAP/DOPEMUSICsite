@@ -1,24 +1,12 @@
 {# services.html #}
-{# Указываем, что этот шаблон наследует от base.html #}
 {% extends 'base.html' %}
 
-{# Переопределяем блок title для заголовка страницы #}
 {% block title %}Услуги{% endblock %}
 
-{# Переопределяем блок body_class для специфичных стилей страницы #}
 {% block body_class %}page-services{% endblock %}
 
-
-{# --- Переопределяем блок content для основного содержимого страницы --- #}
 {% block content %}
-    {# Уникальное содержимое страницы "Услуги" начинается здесь.
-       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
-       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом services.html.
-    #}
 
-    {# Вторая навигация (внутристраничные якоря) - остается здесь, т.к. она уникальна для этой страницы #}
-    {# Убедитесь, что этот div находится внутри контейнера, если это необходимо по вашему дизайну #}
-    {# Если base.html уже предоставляет <div class="container"> внутри <main>, возможно, стоит убрать класс container отсюда #}
     <div class="navbar container">
         <nav>
             <ul>
@@ -31,9 +19,6 @@
             </ul>
         </nav>
     </div>
-
-    {# Основное содержимое страницы "Услуги" из вашего старого кода #}
-    {# Убедитесь, что все эти секции находятся внутри блока content #}
 
     <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
         <h1 id="services">Услуги</h1>
@@ -128,25 +113,16 @@
                         <audio id="track2-after" src="{{ url_for('static', filename='audio/Платина - Санта Клаус.mp3') }}"></audio>
                     </div>
                 </div>
-            </div> {# Закрытие div.examples-block container #}
-
+            </div>
 
             <h2 id="price">Стоимость</h2>
             {# Путь к изображению прайс-листа из static/img/ #}
             <img src="{{ url_for('static', filename='img/pricelist.png') }}" alt="Стоимость" class="pricelist">
-        </div> {# Закрытие div.rent #}
-
-
-    </div> {# Закрытие div.container внутри main #}
-
-
+        </div>
+    </div>
 {% endblock %}
-{# --- Конец блока content --- #}
 
-{# --- Переопределяем блок extra_scripts для подключения специфичного скрипта страницы Услуги --- #}
 {% block extra_scripts %}
-    {# Подключение вашего script.js из папки static/ #}
+    {# Подключение script.js из папки static/ #}
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    {# Если у вас есть другие скрипты только для этой страницы, добавьте их здесь #}
 {% endblock %}
-{# --- Конец блока extra_scripts --- #}
