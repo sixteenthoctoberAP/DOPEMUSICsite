@@ -1,32 +1,19 @@
 {# label.html #}
-{# Указываем, что этот шаблон наследует от base.html #}
 {% extends 'base.html' %}
 
-{# Переопределяем блок title для заголовка страницы #}
 {% block title %}Лейбл{% endblock %}
 
-{# Переопределяем блок body_class для специфичных стилей страницы #}
 {% block body_class %}page-label{% endblock %}
 
-{# --- Переопределяем блок logo для этой страницы --- #}
 {% block logo %}
-    {# Вставляем изображение логотипа для страницы Лейбл #}
     <img src="{{ url_for('static', filename='img/Group 98.svg') }}" alt="Логотип Лейбла" style="margin-left: -12px;">
 {% endblock %}
-{# --- Конец переопределения блока logo --- #}
 
-
-{# --- Переопределяем блок content для основного содержимого страницы --- #}
 {% block content %}
-    {# Уникальное содержимое страницы "Лейбл" начинается здесь.
-       Теги <main> и <div class="container flex-grow-1"> из base.html уже предоставлены.
-       Вам нужно скопировать сюда все, что было внутри <main> в вашем старом label.html.
-    #}
 
     <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
         <div class="title-container">
             <h1>Лейбл</h1>
-            {# Внешняя ссылка на VK - не требует url_for #}
             <a class="on-page" href="https://vk.com/dopemusiclabel?from=groups" target="_blank">Подробнее</a>
         </div>
 
@@ -76,13 +63,5 @@
                 </div>
             </div>
         </div>
-    </div> {# Закрытие div.container #}
-
-
+    </div>
 {% endblock %}
-{# --- Конец блока content --- #}
-
-{# Опционально: если нужны скрипты только для этой страницы, переопределите блок extra_scripts #}
-{# {% block extra_scripts %}
-    <script src="{{ url_for('static', filename='js/label_script.js') }}"></script>
-{% endblock %} #}
