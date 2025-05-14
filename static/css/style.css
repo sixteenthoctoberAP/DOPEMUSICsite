@@ -17,14 +17,13 @@
 body{
     background: url('../img/mainback.jpg') no-repeat center center fixed;
     background-size: cover;
-    font-family: 'Averta CY', sans-serif; /* Наследуется из html, но можно и здесь явно указать */
-    color: #fff; /* Цвет основного текста */
+    font-family: 'Averta CY', sans-serif;
+    color: #fff;
     min-height: 100vh; /* Минимум 100% высоты видимой части окна */
     margin: 0; /* Убираем стандартные отступы */
     padding: 0; /* Убираем стандартные внутренние отступы */
 }
 
-/* Установка 100% высоты для html и body, часто нужно для корректной работы min-height и fixed фона */
 html, body {
     height: 100%;
     margin: 0;
@@ -57,7 +56,7 @@ header nav ul {
     gap: 16px;
     font-size: 25px;
     font-weight: 400;
-    padding: 0; /* Добавил padding: 0 для ul */
+    padding: 0;
 }
 
 nav ul {
@@ -83,7 +82,6 @@ nav ul li {
 nav ul li a {
     text-decoration: none;
     color: #ffffff;
-
 }
 
 /* FOOTER */
@@ -101,6 +99,7 @@ footer h5{
     font-weight: 300;
     color: #ffffff;
     border: 3px solid #ffffff;
+    border-radius: 4px;
     padding: 9px 16px;
     text-decoration: none;
 }
@@ -120,7 +119,7 @@ footer {
 
 .footer-links {
     display: flex;
-    gap: 37px; /* Отступ между иконками */
+    gap: 37px;
 }
 
 .footer-links a {
@@ -152,8 +151,8 @@ footer {
 }
 
 .page .form-control
-/* NAVBAR */
 
+/* NAVBAR */
 nav{
     font-size: 25px;
     font-weight: 300;
@@ -180,9 +179,7 @@ nav ul li:first-child {
     margin-right: 4px;
 }
 
-
 /* CONTACTS */
-
 .page-contacts .navbar nav ul {
     justify-content: flex-start;
     gap: 88px;
@@ -197,9 +194,8 @@ nav ul li:first-child {
     margin: 0;
 }
 
-
 .contacts-info{
-        padding-top: 24px;
+    padding-top: 24px;
 }
 
 .contacts-info h4{
@@ -310,15 +306,12 @@ h4{
 font-weight: 400;
 }
 
-
 .price-title {
     text-align: center;
     padding: 32px 0;
 }
 
-
 /* LABEL */
-
 .page-label {
     background: url('../img/Фон 2.jpg') no-repeat center center fixed;
     background-size: cover;
@@ -392,7 +385,7 @@ font-weight: 400;
     padding: 0;
 }
 .page-label a {
-    text-decoration: none;
+    /*text-decoration: none;*/
 }
 .page-label span {
     font-size: 20px;
@@ -418,6 +411,7 @@ font-weight: 400;
     height: 432px;
     object-fit: cover;
     border: 3px solid #eee;
+    border-radius: 4px;
 }
 /* Расстояние от h1 до изображений */
 .team h1 {
@@ -468,6 +462,7 @@ font-weight: 400;
     position: relative;
     height: 760px; /* Возможно, стоит использовать max-height и отношение сторон */
     border: 3px solid #eee;
+    border-radius: 4px;
 }
 
 /* SERVICES */
@@ -496,9 +491,9 @@ font-weight: 400;
 }
 
 .pricelist{
-margin-top: 32px;
+    margin-top: 32px;
     width: 760px;
-display: block;
+    display: block;
     height: 760px; /* Возможно, стоит использовать max-height и отношение сторон */
     border: 3px solid #eee;
     margin-left: auto; /* Выравнивание по центру */
@@ -507,10 +502,10 @@ display: block;
 
 /* Утилитарные классы bootstrap */
 .mb-4 {
-    margin-bottom: 0px !important; /* Ваш стиль переопределяет стандартный mb-4 */
+    margin-bottom: 0px !important; /* стиль переопределяет стандартный mb-4 */
 }
 .mt-5 {
-    margin-top: 32px !important; /* Ваш стиль переопределяет стандартный mt-5 */
+    margin-top: 32px !important; /* стиль переопределяет стандартный mt-5 */
 }
 
 .play-btn {
@@ -558,6 +553,7 @@ display: block;
     font-weight: 400;
     color: #ffffff;
     border: 3px solid #ffffff;
+    border-radius: 4px;
     padding: 16px 24px;
     text-decoration: none;
     margin-top: 40px;
@@ -583,15 +579,14 @@ display: block;
 .post-image{
     /*width: 760px;*/
     max-height: 760px;
-
-
     object-fit: contain;
-    max-width: 100%; /* Хорошее свойство для адаптивности */
+    max-width: 100%;
     display: block;
     margin: 0 auto;
     margin-top: 16px;
     margin-bottom: 16px;
     border: 3px solid #ffffff;
+    border-radius: 4px;
 }
 
 .posts-list h2{
@@ -602,11 +597,11 @@ display: block;
     font-size: 12.8px;
 }
 
-/* Стили для ссылки "Создать запись" */
+/* "Создать запись" */
 .on-page {
     color: #fff; /* Цвет текста */
     background-color: #007bff;
-    border: 1px solid #007bff; /* Пример границы */
+    border: 1px solid #007bff;
     border-radius: 8px;
     transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease; /* Плавный переход для анимации */
 }
@@ -633,7 +628,7 @@ display: block;
 /* Анимация при наведении (hover) */
 .page-label .on-page:hover {
     background-color: rgba(255, 255, 255, 0.1); /* Темнее при наведении */
-    color: #135BC0; /* Цвет текста остается белым */
+    color: #135BC0;
 }
 
 .review {

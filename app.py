@@ -12,6 +12,7 @@ import pytz
 app = Flask(__name__)
 
 # --- Конфигурация приложения ---
+
 # Настройка URI базы данных SQLAlchemy (используем SQLite)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dope_music.db'
 # Отключение отслеживания изменений объектов SQLAlchemy (рекомендуется для производительности)
@@ -21,6 +22,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'ВАШ_ОЧЕНЬ_НАДЕЖНЫЙ_И_СЛУЧАЙНЫЙ_СЕКРЕТНЫЙ_КЛЮЧ' # <-- Замените это!
 
 # --- Конфигурация для загрузки файлов ---
+
 # Папка, куда будут сохраняться загруженные изображения. Находится внутри папки 'static'.
 UPLOAD_FOLDER = 'static/post_images'
 # Разрешенные расширения файлов изображений
@@ -55,6 +57,7 @@ def allowed_file(filename):
 
 
 # --- Модель пользователя ---
+
 # Определяет структуру таблицы 'user' в базе данных. Наследуется от UserMixin для интеграции с Flask-Login.
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True) # Первичный ключ, автоинкремент
@@ -265,12 +268,11 @@ def create():
             # Повторно отображаем шаблон создания поста, сохраняя введенные данные.
             return render_template('create.html', title=title, text=text)
 
-
         # Создаем новый объект Post.
         # Поле created_at установится автоматически благодаря default=datetime.utcnow.
         # Поле image_filename будет либо уникальным именем файла, либо None.
         post = Post(title=title, text=text, image_filename=image_filename)
-        # Если добавили user_id: post = Post(title=title, text=text, image_filename=image_filename, author=current_user)
+
 
 
         try:
@@ -296,17 +298,13 @@ def create():
     else:
         return render_template('create.html')
 
-# --- НОВЫЙ МАРШРУТ ДЛЯ РЕДАКТИРОВАНИЯ ПОСТА ---
+# --- МАРШРУТ ДЛЯ РЕДАКТИРОВАНИЯ ПОСТА ---
 # Принимает ID поста в URL
 @app.route('/edit/<int:post_id>', methods=['GET', 'POST'])
 @login_required # Только авторизованные пользователи могут редактировать
 def edit(post_id):
     # Ищем пост по ID. Если не найден, возвращаем ошибку 404.
     post = Post.query.get_or_404(post_id)
-
-    # Опционально: Добавить проверку, является ли текущий пользователь автором поста, если вы добавили user_id в модель Post
-    # if post.user_id != current_user.id:
-    #    abort(403) # Запрещено
 
     if request.method == 'POST':
         # Получаем обновленные данные из формы

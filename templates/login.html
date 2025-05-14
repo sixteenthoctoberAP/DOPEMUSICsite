@@ -13,7 +13,7 @@
 
         {# Форма отправляется на текущий URL ('/login') методом POST #}
          {# query string 'next' передается автоматически Flask-Login после перенаправления на страницу логина из-за @login_required #}
-        <form method="post" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05); border: 3px solid #eee; border-radius:0px;  max-width: 400px; margin: 20px auto;">
+        <form method="post" class="form-control" style="padding: 20px; background-color: rgba(255, 255, 255, 0.05); border: 3px solid #eee; border-radius:4px;  max-width: 400px; margin: 20px auto;">
             <div class="mb-3">
                 <label for="usernameInput" class="form-label" style="color: #fff;">Имя пользователя</label>
                  {# value={{ username or '' }} сохранит введенное значение при ошибке #}
