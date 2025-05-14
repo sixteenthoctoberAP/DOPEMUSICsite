@@ -1,96 +1,141 @@
-/* Переопределение стилей Bootstrap */
+/* Переопределение стандартных стилей Bootstrap для контейнеров */
+/* Используем стандартные отступы Bootstrap, но ограничиваем максимальную ширину на больших экранах */
 .container, .container-fluid {
-    padding-right: 0 !important;
-    padding-left: 0 !important;
+    padding-right: var(--bs-gutter-x, 0.75rem);
+    padding-left: var(--bs-gutter-x, 0.75rem);
     margin-right: auto;
     margin-left: auto;
 }
 
-/* Подключение шрифта */
+/* Ограничение максимальной ширины контейнера на больших экранах */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1200px;
+    }
+}
+
+/* Подключение пользовательского шрифта */
 @font-face {
     font-family: 'Averta CY';
+    /* Путь к файлу шрифта относительно static/css/ */
+    src: url('../fonts/Averta CY/AvertaCY-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
 
-body{
-    background: url('../img/mainback.jpg') no-repeat center center fixed;
-    background-size: cover;
+/* Общие стили для body и html */
+html {
     font-family: 'Averta CY', sans-serif;
-    color: #fff;
-    min-height: 100vh; /* Минимум 100% высоты видимой части окна */
-    margin: 0; /* Убираем стандартные отступы */
-    padding: 0; /* Убираем стандартные внутренние отступы */
-}
-
-html, body {
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
-.container{
-    width: 1200px;
-    margin: 0 auto;
-}
-
-header{
-    padding: 28px 0;
-}
-
-header nav {
-    float: right;
-    /* width: 50%; */
-}
-
-header li{
-    padding: 0px 8px;
-}
-
-header nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    margin: 24px 0;
-    gap: 16px;
-    font-size: 25px;
-    font-weight: 400;
-    padding: 0;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
+body {
+    /* Путь к фоновой картинке относительно static/css/ */
+    background: url('../img/mainback.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Averta CY', sans-serif;
+    color: #fff;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
-    height: 48px;
-    line-height: 48px; /* Выравниваем текст по вертикали */
-}
-nav {
-    font-size: 25px;
-    font-weight: 300;
+    line-height: 1.5; /* Улучшаем читаемость основного текста */
 }
 
-nav ul li {
-    padding: 0;
-    margin: 0;
-    font-size: 25px;
+/* Установка 100% высоты для html и body */
+html, body {
+    height: 100%;
 }
 
-nav ul li a {
-    text-decoration: none;
-    color: #ffffff;
+/* Стили для контейнера .page, использующего flexbox для прижатия футера к низу */
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+.navbar{
+    display: inline-block;
+}
+/* --- Стили для шапки с Bootstrap Navbar --- */
+header.navbar {
+    padding: 28px 0; /* Сохраняем ваш padding */
+    /* Bootstrap уже управляет flexbox и выравниванием */
 }
 
-/* FOOTER */
+@media (min-width: 992px) {
+    header.navbar .navbar-nav .nav-item .nav-link {
+        padding: 0px 8px; /* Восстанавливаем ваш padding для li */
+        font-size: 25px; /* Восстанавливаем ваш font-size */
+        font-weight: 400; /* Восстанавливаем ваш font-weight */
+        /*color: #ffffff; !* Восстанавливаем ваш цвет *!*/
+        line-height: 48px;
+        height: 48px;
+    }
 
+
+    /* Убираем Bootstrap margin-right у последнего элемента, если он есть */
+     header.navbar .navbar-nav .nav-item:last-child .nav-link {
+        padding-right: 0;
+     }
+      header.navbar .navbar-nav .nav-item:first-child .nav-link {
+        padding-left: 0;
+     }
+
+     /* Убираем стандартные margin на ul, если они мешают */
+     header.navbar .navbar-nav {
+        margin: 0;
+        padding: 0;
+        gap: 16px; /* Восстанавливаем ваш gap */
+     }
+}
+
+
+/* Стили для выпадающего меню (navbar-collapse) на мобильных */
+@media (max-width: 991px) { /* Для экранов меньше 992px */
+    header.navbar .navbar-toggler {
+        margin-right: 0; /* Убираем возможный margin от Bootstrap */
+    }
+
+    header.navbar .navbar-collapse {
+        background-color: rgba(0, 0, 0, 0.3); /* Полупрозрачный темный фон */
+        padding: 8px; /* Внутренние отступы */
+        border-radius: 4px; /* Скругление углов */
+        margin-top: 8px; /* Отступ от кнопки-переключателя */
+    }
+
+    header.navbar .navbar-nav {
+        flex-direction: column; /* Элементы списка вертикально */
+        align-items: center; /* Выравниваем элементы списка по центру */
+        gap: 10px; /* Уменьшаем расстояние между элементами */
+        margin: 0; /* Убираем margin */
+        padding: 0; /* Убираем padding */
+    }
+
+    header.navbar .navbar-nav .nav-item {
+        width: 100%; /* Элементы списка занимают всю ширину выпадающего меню */
+        text-align: center; /* Выравниваем текст по центру */
+    }
+
+    header.navbar .navbar-nav .nav-item .nav-link {
+        padding: 10px 0; /* Уменьшаем padding для мобильных */
+        font-size: 20px; /* Уменьшаем размер шрифта */
+        font-weight: 400;
+        color: #ffffff;
+        height: auto; /* Автоматическая высота */
+        line-height: normal; /* Сбрасываем line-height */
+    }
+}
+
+
+/* --- Стили для футера --- */
 footer h5{
     font-size: 25px;
     font-weight: 300;
     color: #ffffff;
-    /* padding-top: 4px; */
 }
 
 .knopka{
@@ -102,24 +147,42 @@ footer h5{
     border-radius: 4px;
     padding: 9px 16px;
     text-decoration: none;
+     /* Добавляем transition для анимации */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
 }
+.knopka:hover {
+    background-color: #ffffff;
+    color: #000;
+    border-color: #ffffff;
+}
+.knopka:active {
+    background-color: #eee;
+    color: #000;
+    border-color: #eee;
+    transform: translateY(1px);
+}
+
 
 footer {
     padding: 52px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* Позволяем элементам переноситься на новую строку */
 }
 
 .footer-right {
     display: flex;
     align-items: center;
     gap: 37px; /* Отступ между кнопкой и иконками */
+    flex-wrap: wrap; /* Позволяем элементам переноситься на новую строку */
+    justify-content: center; /* Выравниваем по центру на мобильных */
 }
 
 .footer-links {
     display: flex;
     gap: 37px;
+    justify-content: center; /* Выравниваем по центру на мобильных */
 }
 
 .footer-links a {
@@ -133,56 +196,92 @@ footer {
     object-fit: contain;
 }
 
-.page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    position: relative;
-    z-index: 1;
+/* Медиа-запрос для футера на мобильных */
+@media (max-width: 767px) {
+    footer {
+        flex-direction: column; /* Располагаем элементы футера вертикально */
+        align-items: center; /* Выравниваем по центру */
+        padding: 20px 0; /* Уменьшаем padding */
+        text-align: center; /* Выравниваем текст по центру */
+    }
+
+    footer h5 {
+        font-size: 18px; /* Уменьшаем размер шрифта */
+        margin-bottom: 15px; /* Добавляем отступ снизу */
+    }
+
+    .footer-right {
+        flex-direction: column; /* Располагаем элементы footer-right вертикально */
+        gap: 15px; /* Уменьшаем отступ */
+    }
+
+    .footer-links {
+        gap: 20px; /* Уменьшаем отступ между иконками */
+    }
 }
 
-.page-create h1{
-    padding-top: 0px;
-    margin-bottom: 16px;
-}
-.page-edit h1{
-    padding-top: 0px;
-    margin-bottom: 16px;
-}
 
-.page .form-control
-
-/* NAVBAR */
-nav{
+/* --- Общие стили для второй навигации (не в шапке) --- */
+/* Эти стили применяются к div с классом .navbar, который не является частью основной шапки */
+.navbar:not(header.navbar) {
     font-size: 25px;
     font-weight: 300;
+    /* Добавьте другие общие стили для контейнера второй навигации, если нужно */
 }
 
-.navbar nav {
-    width: 100%;
-}
-
-.navbar nav ul {
+.navbar:not(header.navbar) nav ul {
     list-style: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* По умолчанию растягиваем элементы */
     padding: 0;
     margin: 0;
     width: 100%;
+    height: 48px;
+    line-height: 48px;
 }
 
-nav ul li:first-child {
-    margin-left: 0px;
+.navbar:not(header.navbar) nav ul li {
+    padding: 0;
+    margin: 0;
 }
 
-.navbar nav ul li:last-child {
-    margin-right: 4px;
+.navbar:not(header.navbar) nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
 }
 
-/* CONTACTS */
-.page-contacts .navbar nav ul {
-    justify-content: flex-start;
-    gap: 88px;
+/* Медиа-запрос для второй навигации на мобильных (общие стили) */
+@media (max-width: 767px) {
+    .navbar:not(header.navbar) nav ul {
+        flex-direction: column; /* Элементы списка вертикально */
+        height: auto; /* Автоматическая высота */
+        line-height: normal;
+        gap: 10px; /* Уменьшаем расстояние между элементами */
+        font-size: 20px; /* Уменьшаем размер шрифта */
+        align-items: center; /* Выравниваем по центру */
+    }
+     .navbar:not(header.navbar) nav ul li {
+         width: 100%; /* Элементы списка занимают всю ширину */
+         text-align: center; /* Выравниваем текст по центру */
+     }
+     .navbar:not(header.navbar) nav ul li a {
+         padding: 5px 0; /* Добавляем небольшой padding для удобства нажатия */
+     }
+}
+
+
+/* --- Стили для страницы КОНТАКТЫ (.page-contacts) --- */
+.page-contacts .navbar:not(header.navbar) nav ul { /* Уточняем селектор для второй навигации на странице контактов */
+    justify-content: flex-start; /* Выравниваем по левому краю */
+    gap: 88px; /* Может быть слишком большим на мобильных */
+}
+
+/* Медиа-запрос для специфичной навигации контактов на мобильных */
+@media (max-width: 767px) {
+    .page-contacts .navbar:not(header.navbar) nav ul { /* Уточняем селектор */
+        justify-content: center; /* Центрируем элементы на мобильных */
+        gap: 10px; /* Уменьшаем gap */
+    }
 }
 
 .contacts-info h4{
@@ -190,22 +289,45 @@ nav ul li:first-child {
     font-weight: 400;
     color: #ffffff;
     opacity: 1;
-    /* padding-top: 4px; */
     margin: 0;
 }
 
 .contacts-info{
     padding-top: 24px;
 }
+/* Медиа-запрос для contacts-info на мобильных */
+@media (max-width: 767px) {
+    .contacts-info {
+        padding-top: 15px; /* Уменьшаем padding */
+    }
+}
 
 .contacts-info h4{
     padding-top: 16px;
 }
+/* Медиа-запрос для contacts-info h4 на мобильных */
+@media (max-width: 767px) {
+    .contacts-info h4 {
+        padding-top: 10px; /* Уменьшаем padding */
+        font-size: 18px; /* Уменьшаем размер шрифта */
+    }
+}
+
 .contacts-info-social {
-    float: right;
-    /* padding-top: 30px; */
+    float: right; /* float может создавать проблемы с адаптивностью */
     display: flex;
     gap: 32px;
+}
+
+/* Медиа-запрос для contacts-info-social на мобильных */
+@media (max-width: 767px) {
+    .contacts-info-social {
+        float: none; /* Убираем float */
+        justify-content: center; /* Центрируем иконки */
+        gap: 15px; /* Уменьшаем gap */
+        width: 100%; /* Занимаем всю ширину для центрирования */
+        margin-top: 10px; /* Добавляем отступ сверху */
+    }
 }
 
 .contacts-row {
@@ -213,6 +335,19 @@ nav ul li:first-child {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
+    flex-wrap: wrap; /* Позволяем элементам переноситься на новую строку */
+}
+/* Медиа-запрос для contacts-row на мобильных */
+@media (max-width: 767px) {
+    .contacts-row {
+        flex-direction: column; /* Располагаем элементы вертикально */
+        align-items: flex-start; /* Выравниваем по левому краю */
+        margin-bottom: 20px; /* Увеличиваем отступ между строками */
+    }
+     .contacts-row h4 {
+         width: 100%; /* Заголовки занимают всю ширину */
+         text-align: center; /* Центрируем текст */
+     }
 }
 
 .contacts-row h4 {
@@ -220,33 +355,43 @@ nav ul li:first-child {
     padding: 0;
 }
 
+/* Стили для контейнера карты */
 .map-container {
-    position: relative;
+    position: relative; /* Оставляем relative, если нужны абсолютные элементы внутри (например, ссылки Яндекс) */
     overflow: hidden;
     width: 100%;
     margin-top: 32px;
-}
-/* Стили для iframe карты */
-.map-container {
     filter: grayscale(100%) brightness(95%) contrast(135%); /* Применяем фильтры к контейнеру */
     border: 3px solid #eee;
-    width: 100%;
-    height: 406px;
+    border-radius: 4px;
+    height: 406px; /* Фиксированная высота на больших экранах */
 }
 
+/* Стили для iframe карты внутри контейнера */
 .map-container iframe {
     filter: none; /* Сбрасываем фильтры для самого iframe, если они были унаследованы */
     width: 100%;
+    height: 100%; /* iframe занимает 100% высоты родительского контейнера */
+    display: block; /* Убедимся, что iframe является блочным элементом */
+}
+/* Медиа-запрос для map-container на мобильных */
+@media (max-width: 767px) {
+    .map-container {
+        height: auto; /* Уменьшаем высоту на мобильных */
+        margin-top: 20px; /* Уменьшаем отступ */
+    }
 }
 
-/* Заголовки */
+
+
+/* --- Общие стили для ЗАГОЛОВКОВ --- */
 h1{
     font-size: 48.83px;
     font-weight: 600;
     color: #ffffff;
     padding-top: 32px;
     margin: 0;
-    line-height: 60px;
+    line-height: 1.2;
 }
 
 h2{
@@ -255,6 +400,7 @@ h2{
     color: #ffffff;
     padding-top: 16px;
     margin: 0;
+    line-height: 1.3;
 }
 
 h5{
@@ -264,6 +410,7 @@ h5{
     padding-top: 8px;
     text-align: justify;
     margin: 0;
+    line-height: 1.5;
 }
 
 h6{
@@ -272,14 +419,15 @@ h6{
     color: #ffffff;
     padding-top: 16px;
     margin: 0;
+    line-height: 1.6;
 }
 
 h3{
     font-size: 39.06px;
     font-weight: 600;
     color: #ffffff;
-    /* padding-top: 8px; */
     margin: 0;
+    line-height: 1.3;
 }
 
 h4{
@@ -287,19 +435,47 @@ h4{
     font-weight: 600;
     color: #ffffff;
     opacity: 0.8;
-    /* padding-top: 8px; */
     margin: 0;
 }
 
-/* Исправление отступов для конкретных секций */
-.team.section h1 {
-    padding-top: 80px !important;
+/* Медиа-запрос для размеров шрифтов заголовков на мобильных */
+@media (max-width: 767px) {
+    h1 { font-size: 32px; padding-top: 20px; line-height: 1.1; }
+    h2 { font-size: 24px; padding-top: 10px; line-height: 1.2; }
+    h3 { font-size: 28px; line-height: 1.2; }
+    h4 { font-size: 20px; }
+    h5 { font-size: 18px; padding-top: 5px; line-height: 1.4; }
+    h6 { font-size: 16px; padding-top: 10px; line-height: 1.5; }
+}
+@media (max-width: 575px) { /* Для совсем маленьких экранов */
+    h1 { font-size: 28px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 24px; }
+    h4 { font-size: 18px; }
+    h5 { font-size: 16px; }
+    h6 { font-size: 14px; }
+}
+
+
+/* Исправление отступов для конкретных секций (общие стили) */
+/* Эти отступы лучше задавать через margin-top/bottom или padding-top/bottom
+   на самих секциях или контейнерах, а не на заголовках внутри них.
+   Их тоже нужно будет скорректировать в медиа-запросах. */
+.rent h2{
+    padding-top: 80px !important; /* Слишком большой отступ для мобильных */
     margin-top: 0 !important;
 }
 
-.rent h2{
-    padding-top: 80px !important;
-    margin-top: 0 !important;
+/* Медиа-запрос для корректировки больших отступов на мобильных */
+@media (max-width: 767px) {
+    .rent h2 {
+        padding-top: 40px !important; /* Уменьшаем отступ */
+    }
+     .team h1,
+     .equipment h1,
+     .reviews h1 {
+         padding-top: 30px; /* Уменьшаем отступ сверху для заголовков секций */
+     }
 }
 
 .page-index h2{
@@ -310,19 +486,27 @@ font-weight: 400;
     text-align: center;
     padding: 32px 0;
 }
+/* Медиа-запрос для price-title на мобильных */
+@media (max-width: 767px) {
+    .price-title {
+        padding: 20px 0; /* Уменьшаем padding */
+    }
+}
 
-/* LABEL */
+
+/* --- Стили для страницы ЛЕЙБЛ (.page-label) --- */
 .page-label {
     background: url('../img/Фон 2.jpg') no-repeat center center fixed;
     background-size: cover;
 }
+
 
 .page-label nav ul li a {
     text-decoration: none;
     color: #135BC0; /* Цвет ссылок навигации для этой страницы */
     font-weight: 400;
 }
-/* Цвет h1 для страницы label */
+/* Цвет заголовков для страницы label */
 .page-label h1{
     line-height: 60px;
     color: #135BC0;
@@ -343,7 +527,7 @@ font-weight: 400;
     font-weight: 500;
     line-height: 1.8; /* Добавляем межстрочный интервал */
 }
-.page-label a{
+.page-label a{ /* Применяем ко всем ссылкам, кроме кнопок */
     color: #135BC0; /* Цвет ссылок по умолчанию для страницы label */
     font-weight: 400;
 }
@@ -356,7 +540,23 @@ font-weight: 400;
     border: 3px solid #135BC0;
     padding: 9px 16px;
     text-decoration: none;
+    border-radius: 4px;
+     /* Добавляем transition для анимации */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
 }
+.page-label .knopka:hover {
+     background-color: rgba(19, 91, 192, 0.1); /* Пример полупрозрачного фона */
+     color: #135BC0;
+     border-color: #135BC0;
+}
+.page-label .knopka:active {
+     background-color: rgba(19, 91, 192, 0.2); /* Еще темнее полупрозрачный фон */
+     color: #135BC0;
+     border-color: #135BC0;
+     transform: translateY(1px);
+}
+
+
 .page-label .footer-links img {
     border: 3px solid #135BC0;
     border-radius: 100%;
@@ -370,66 +570,154 @@ font-weight: 400;
     text-decoration: none;
     float: right;
     margin-top: 20px; /* Выравнивание по вертикали относительно h1 */
+    border-radius: 4px;
+     /* Добавляем transition для анимации */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
 }
+
+/* Анимация .on-page на странице Лейбл при наведении */
+.page-label .on-page:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Темнее при наведении */
+    color: #135BC0;
+    border-color: #135BC0;
+}
+/* Анимация .on-page на странице Лейбл при нажатии */
+.page-label .on-page:active {
+    background-color: rgba(255, 255, 255, 0.2); /* Еще темнее полупрозрачный фон */
+    color: #135BC0;
+    border-color: #135BC0;
+    transform: translateY(1px);
+}
+
 
 /* Добавляем контейнер для h1 и кнопки */
 .page-label .title-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* margin-bottom: 32px; */
+    flex-wrap: wrap; /* Позволяем элементам переноситься на новую строку */
 }
 
 .page-label .title-container h1 {
     margin: 0;
     padding: 0;
 }
-.page-label a {
-    /*text-decoration: none;*/
-}
 .page-label span {
     font-size: 20px;
-    font-weight: 600;
-    color: #135BC0;
+    /*font-weight: 600;*/
+    /*color: #135BC0;*/
     display: block;
     text-align: center;
     padding-top: 16px;
 }
+/* Медиа-запрос для span на странице Лейбл */
+@media (max-width: 767px) {
+    .page-label span {
+        font-size: 16px;
+        padding-top: 10px;
+    }
+    .page-label .on-page {
+        font-size: 16px;
+        padding: 8px 15px;
+        margin-bottom: 20px;
+        float: none; /* Убираем float */
+        display: block; /* Делаем блочным для центрирования */
+        text-align: center; /* Выравниваем текст по центру */
+    }
+}
+
 .label-item{
     padding-top: 48px;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap; /* Позволяем элементам переноситься на новую строку */
+    gap: 20px; /* Добавляем gap между элементами */
+    /*justify-content: center; !* Центрируем элементы *!*/
 }
+/* Медиа-запрос для элементов лейбла на мобильных */
+@media (max-width: 767px) {
+    .label-item {
+        flex-direction: column; /* Располагаем элементы вертикально */
+        align-items: center; /* Выравниваем по центру */
+        padding-top: 20px; /* Уменьшаем padding */
+        gap: 30px; /* Увеличиваем отступ между блоками */
+    }
+}
+
+
 .label-item-block img{
-    border: 3px solid #95BEFE;}
+    border: 3px solid #95BEFE;
+    border-radius: 4px;
+}
 
 
-/* ABOUT */
+/* --- Стили для страницы О НАС (.page-about) --- */
+.page-about .navbar:not(header.navbar) nav ul { /* Уточняем селектор */
+    justify-content: center; /* Центрируем ссылки */
+    gap: 40px; /* Отступ между ссылками */
+    padding: 0 10px; /* Добавляем padding для мобильных */
+}
 
-.team img{
-    width: 347px;
-    height: 432px;
+/* Медиа-запрос для второй навигации на странице О нас на мобильных */
+@media (max-width: 767px) {
+     .page-about .navbar:not(header.navbar) nav ul {
+        flex-direction: column; /* Элементы списка вертикально */
+        align-items: center; /* Выравниваем по центру */
+        gap: 10px; /* Уменьшаем отступ на мобильных */
+        height: auto; /* Автоматическая высота */
+        line-height: normal;
+     }
+     .page-about .navbar:not(header.navbar) nav ul li {
+         width: 100%; /* Элементы списка занимают всю ширину */
+         text-align: center; /* Выравниваем текст по центру */
+     }
+     .page-about .navbar:not(header.navbar) nav ul li a {
+         padding: 5px 0; /* Добавляем небольшой padding для удобства нажатия */
+     }
+}
+
+/* Стили для секции Команда */
+.team {
+    display: flex;
+    flex-wrap: wrap; /* Позволяем элементам переноситься на новую строку */
+    gap: 20px; /* Добавляем отступ между элементами */
+    justify-content: center; /* Центрируем элементы */
+}
+
+/* Стили для каждого блока члена команды */
+.team-info{
+    width: 100%; /* По умолчанию занимает всю ширину родителя */
+    max-width: 347px; /* Ограничиваем максимальную ширину на больших экранах */
+    text-align: center; /* Центрируем текст под изображением */
+}
+
+/* Стили для изображений команды */
+.team-info img{
+    width: 100%; /* Изображение занимает всю ширину родительского team-info */
+    height: auto; /* Высота автоматически, сохраняем пропорции */
+    max-width: 347px; /* Ограничиваем максимальную ширину на больших экранах */
     object-fit: cover;
     border: 3px solid #eee;
     border-radius: 4px;
-}
-/* Расстояние от h1 до изображений */
-.team h1 {
-    margin-bottom: 32px;
-    padding-top: 48px;
-}
-.equipment h1 {
-    padding-top: 48px;
-}
-.team-info{
-    display: inline-block;
-    margin-right: 75px;
-    vertical-align: top;
+    display: block; /* Делаем блочным для центрирования */
+    margin-left: auto; /* Центрируем изображение */
+    margin-right: auto; /* Центрируем изображение */
 }
 
-/* Убираем margin-right у последнего изображения */
-.team-info:last-child {
-    margin-right: 0;
+/* Медиа-запрос для изображений команды на мобильных */
+@media (max-width: 767px) {
+    .team-info {
+        margin-bottom: 20px; /* Добавляем отступ снизу */
+        max-width: 300px; /* Уменьшаем максимальную ширину блока на мобильных */
+    }
+
+    .team-info:last-child {
+        margin-bottom: 0; /* Убираем отступ снизу у последнего элемента */
+    }
+
+    .team-info img {
+        max-width: 300px; /* Уменьшаем максимальную ширину изображения на мобильных */
+    }
 }
 
 .team-info p{
@@ -440,72 +728,142 @@ font-weight: 400;
     margin: 0;
 }
 .team-info h5{
+    font-size: 18px;
     padding-top: 16px;
 }
+
+/* Стили для списка оборудования */
 .equipment h6{
     padding-top: 16px;
     font-weight: 400;
     line-height: 2;
 }
-
-
-#equipmentCarousel .carousel-item img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-
+/* Медиа-запрос для equipment h6 на мобильных */
+@media (max-width: 767px) {
+    .equipment h6 {
+        line-height: 1.6; /* Уменьшаем межстрочный интервал */
+        font-size: 16px; /* Убедимся, что размер шрифта адаптивен */
+    }
 }
 
-.carousel-inner {
-    width: 760px;
+/* Стили для карусели оборудования */
+.equipment .carousel {
+    margin-top: 16px; /* Используем стандартный mt-4 из Bootstrap */
+}
+
+.equipment .carousel-inner {
+    width: 760px; /* Фиксированная ширина на больших экранах */
     margin: 0 auto;
     position: relative;
-    height: 760px; /* Возможно, стоит использовать max-height и отношение сторон */
+    height: 760px; /* Фиксированная высота на больших экранах */
     border: 3px solid #eee;
     border-radius: 4px;
+    overflow: hidden;
 }
 
-/* SERVICES */
-/* отзывы */
+/* Медиа-запрос для карусели оборудования на мобильных */
+@media (max-width: 767px) {
+    .equipment .carousel-inner {
+        width: 100%; /* Занимает всю доступную ширину контейнера */
+        max-width: 400px; /* Ограничиваем максимальную ширину на мобильных */
+        height: auto; /* Автоматическая высота */
+        border: 3px solid #eee; /* Сохраняем границу */
+    }
+     .equipment .carousel-item img {
+        width: 100%; /* Изображение занимает всю ширину item */
+        height: auto; /* Сохраняем пропорции */
+        object-fit: cover; /* Обрезаем, чтобы заполнить */
+    }
+}
 
+/* Стили для секции Отзывы */
 .reviews h1{
     padding-top: 80px;
+    width: 100%; /* Заголовок занимает всю ширину для центрирования */
+    text-align: center; /* Центрируем заголовок */
 }
 
-.mt-4 {
-    margin-top: 16px !important;
+/* Стили для блока отзывов на странице О нас */
+.page-about .reviews .review {
+    display: flex; /* Используем flexbox */
+    gap: 24px; /* Устанавливаем расстояние между Flex-элементами (ссылками) */
+    align-items: center; /* Выравнивание по вертикали */
+    flex-wrap: wrap; /* Опционально: чтобы ссылки переносились на новую строку на узких экранах */
+     padding-top: 24px;
 }
 
-.reviews-widget-frame {
-    width: 100%;
-    height: 100%;
-    border: 3px solid #eee;
+/* Медиа-запрос для блока отзывов на мобильных */
+@media (max-width: 767px) {
+    .page-about .reviews .review {
+        gap: 15px; /* Уменьшаем расстояние между иконками */
+        padding-top: 15px; /* Уменьшаем padding */
+    }
+     .page-about .reviews .review a img {
+         width: 40px; /* Уменьшаем размер иконок */
+         height: 40px;
+     }
 }
 
-/* M&M (Music & Media?) */
+
+/* --- Стили для страницы УСЛУГИ (.page-services) --- */
+/* Вторая навигация на странице Услуги */
+.page-services .navbar:not(header.navbar) nav ul { /* Уточняем селектор */
+    justify-content: space-between; /* Растягиваем элементы */
+    gap: 10px; /* Добавляем небольшой gap */
+    padding: 0 10px; /* Добавляем padding для мобильных */
+}
+
+/* Медиа-запрос для второй навигации на странице Услуги на мобильных */
+@media (max-width: 767px) {
+     .page-services .navbar:not(header.navbar) nav ul {
+        flex-direction: column; /* Элементы списка вертикально */
+        align-items: center; /* Выравниваем по центру */
+        gap: 10px; /* Уменьшаем отступ на мобильных */
+        height: auto; /* Автоматическая высота */
+        line-height: normal;
+        padding: 10px 0; /* Уменьшаем padding */
+     }
+     .page-services .navbar:not(header.navbar) nav ul li {
+         width: 100%; /* Элементы списка занимают всю ширину */
+         text-align: center; /* Выравниваем текст по центру */
+     }
+     .page-services .navbar:not(header.navbar) nav ul li a {
+         padding: 5px 0; /* Добавляем небольшой padding для удобства нажатия */
+     }
+}
+
+/* Стили для примеров работ (аудиоплееров) */
 .examples-block {
   background-color: rgba(255, 255, 255, 0.05);
   padding: 20px;
   border: 3px solid #eee;
-  /* border-radius: 8px; */
+  border-radius: 4px;
+}
+/* Медиа-запрос для examples-block на мобильных */
+@media (max-width: 767px) {
+    .examples-block {
+        padding: 15px; /* Уменьшаем padding */
+    }
 }
 
 .pricelist{
     margin-top: 32px;
-    width: 760px;
+    width: 760px; /* Фиксированная ширина на больших экранах */
     display: block;
-    height: 760px; /* Возможно, стоит использовать max-height и отношение сторон */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
     border: 3px solid #eee;
+    border-radius: 4px;
     margin-left: auto; /* Выравнивание по центру */
     margin-right: auto; /* Выравнивание по центру */
+    max-width: 100%; /* Хорошее свойство для адаптивности */
 }
-
-/* Утилитарные классы bootstrap */
-.mb-4 {
-    margin-bottom: 0px !important; /* стиль переопределяет стандартный mb-4 */
-}
-.mt-5 {
-    margin-top: 32px !important; /* стиль переопределяет стандартный mt-5 */
+/* Медиа-запрос для прайс-листа на мобильных */
+@media (max-width: 767px) {
+    .pricelist {
+        /*width: 90%; !* Используем проценты для адаптивности *!*/
+        /*max-width: 400px; !* Ограничиваем максимальную ширину *!*/
+        margin-top: 20px; /* Уменьшаем отступ */
+    }
 }
 
 .play-btn {
@@ -520,8 +878,11 @@ font-weight: 400;
 .time {
   font-size: 0.9rem;
   opacity: 0.7;
+    margin-top: 2px;
 }
-
+.next-track {
+    padding-top: 0px;
+}
 .progress-container {
   height: 6px;
   background-color: rgba(255, 255, 255, 0.2);
@@ -542,11 +903,54 @@ font-weight: 400;
     color: #ffffff;
     display: block;
     text-align: center;
+    /*padding-top: 16px;*/
 }
+/* Медиа-запрос для span в examples-block на мобильных */
+@media (max-width: 767px) {
+    .examples-block span {
+        font-size: 16px; /* Уменьшаем размер шрифта */
+
+    }
+}
+
 .next-track{
     padding-top: 24px;
 }
+/* Медиа-запрос для next-track на мобильных */
+@media (max-width: 767px) {
+    .next-track {
+        padding-top: 15px; /* Уменьшаем padding */
+    }
+}
 
+/* Стили для строки трека в примерах работ */
+.track-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap; /* Позволяем элементам переноситься */
+  align-items: center; /* Выравниваем по центру по вертикали */
+}
+/* Медиа-запрос для track-row на мобильных */
+@media (max-width: 575px) { /* Для экранов меньше 576px (Bootstrap sm breakpoint) */
+    .track-row {
+        flex-direction: column; /* Располагаем элементы вертикально */
+        align-items: flex-start; /* Выравниваем по левому краю */
+        padding-bottom: 15px; /* Увеличиваем padding */
+        margin-bottom: 15px; /* Увеличиваем margin */
+    }
+    .track-row > div { /* Применяем к дочерним div (col-md-6) */
+        width: 100%; /* Занимают всю ширину */
+        margin-bottom: 10px; /* Добавляем отступ между блоками До/После */
+    }
+    .track-row > div:last-child {
+        margin-bottom: 0; /* Убираем отступ у последнего */
+    }
+}
+
+
+/* --- Стили для ГЛАВНОЙ СТРАНИЦЫ (.page-index) --- */
 .mainknopka{
     display: inline-block;
     font-size: 24px;
@@ -557,16 +961,89 @@ font-weight: 400;
     padding: 16px 24px;
     text-decoration: none;
     margin-top: 40px;
+    /* Добавляем transition для анимации */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+}
+/* Анимация mainknopka при наведении */
+.mainknopka:hover {
+    background-color: #ffffff;
+    color: #000;
+    border-color: #ffffff;
+}
+/* Анимация mainknopka при нажатии */
+.mainknopka:active {
+    background-color: #eee;
+    color: #000;
+    border-color: #eee;
+    transform: translateY(1px);
+}
+/* Медиа-запрос для mainknopka на мобильных */
+@media (max-width: 767px) {
+    .mainknopka {
+        font-size: 18px; /* Уменьшаем размер шрифта */
+        padding: 10px 20px; /* Уменьшаем padding */
+        margin-top: 20px; /* Уменьшаем отступ */
+        display: block; /* Делаем блочной для центрирования */
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
 }
 
-/* MEDIA */
+
+/* Стили для карусели на главной странице */
+/* Убираем inline стили из index.html и переносим сюда */
+.page-index .carousel {
+    height: 500px; /* Высота на больших экранах */
+    margin: 0 auto !important;
+    float: right; /* Выравнивание по правому краю */
+
+}
+
+.page-index .carousel-inner {
+    width: 500px; /* Ширина на больших экранах */
+    height: 500px; /* Высота на больших экранах */
+    overflow: hidden;
+    border-radius: 4px;
+    border: 3px solid #eee; /* Сохраняем границу */
+}
+.page-index .carousel-item img {
+    width: 100%; /* Изображение занимает всю ширину item */
+    height: 100%; /* Изображение занимает всю высоту item */
+    object-fit: cover; /* Обрезаем, чтобы заполнить */
+}
+
+
+/* Медиа-запрос для карусели на главной странице на мобильных */
+@media (max-width: 767px) {
+    .page-index .carousel {
+        height: auto; /* Автоматическая высота */
+        float: none; /* Убираем float */
+        margin: 20px auto !important; /* Центрируем и добавляем отступ */
+        width: 90%; /* Используем проценты для адаптивности */
+        max-width: 400px; /* Ограничиваем максимальную ширину */
+    }
+
+    .page-index .carousel-inner {
+        width: 100%; /* Занимает всю ширину родителя */
+        height: auto; /* Автоматическая высота */
+        border: 3px solid #eee; /* Сохраняем границу */
+    }
+     .page-index .carousel-item img {
+        width: 100%; /* Изображение занимает всю ширину item */
+        height: auto; /* Сохраняем пропорции */
+        object-fit: cover; /* Обрезаем, чтобы заполнить */
+    }
+}
+
+
+/* --- Стили для страницы МЕДИА (.page-media) --- */
 
 .page-media h1{
     padding: 0;
 }
 
 .page-media .on-page{
-    /* display: inline-block; */
     font-size: 20px;
     font-weight: 600;
     color: #ffffff;
@@ -574,10 +1051,46 @@ font-weight: 400;
     padding: 12px 20px;
     text-decoration: none;
     float: right;
+    border-radius: 4px;
+     /* Добавляем transition для анимации */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+}
+/* Анимация .on-page на странице Медиа при наведении */
+.page-media .on-page:hover {
+     background-color: rgba(255, 255, 255, 0.1); /* Пример полупрозрачного фона */
+     color: #ffffff;
+     border-color: #ffffff;
+}
+/* Анимация .on-page на странице Медиа при нажатии */
+.page-media .on-page:active {
+     background-color: rgba(255, 255, 255, 0.2); /* Еще темнее полупрозрачный фон */
+     color: #ffffff;
+     border-color: #ffffff;
+     transform: translateY(1px);
 }
 
+/* Медиа-запрос для .on-page на странице Медиа на мобильных */
+@media (max-width: 767px) {
+    .page-media .on-page {
+        font-size: 16px;
+        padding: 8px 15px;
+        float: none; /* Убираем float */
+        display: block; /* Делаем блочным для центрирования */
+        margin: 20px auto 0; /* Центрируем и добавляем отступ */
+        text-align: center; /* Выравниваем текст по центру */
+    }
+     .page-media .title-container {
+         flex-direction: column; /* Располагаем заголовок и кнопку вертикально */
+         align-items: center; /* Выравниваем по центру */
+         gap: 10px; /* Отступ между заголовком и кнопкой */
+     }
+     .page-media .title-container h1 {
+         padding-top: 0; /* Убираем лишний отступ */
+     }
+}
+
+
 .post-image{
-    /*width: 760px;*/
     max-height: 760px;
     object-fit: contain;
     max-width: 100%;
@@ -587,7 +1100,19 @@ font-weight: 400;
     margin-bottom: 16px;
     border: 3px solid #ffffff;
     border-radius: 4px;
+    height: auto;
+    width: 100%;
 }
+/* Медиа-запрос для post-image на мобильных */
+@media (max-width: 767px) {
+    .post-image {
+        width: 95%; /* Уменьшаем ширину */
+        max-width: 400px; /* Ограничиваем максимальную ширину */
+        margin-top: 10px; /* Уменьшаем отступ */
+        margin-bottom: 10px; /* Уменьшаем отступ */
+    }
+}
+
 
 .posts-list h2{
     padding-top: 0px;
@@ -597,49 +1122,170 @@ font-weight: 400;
     font-size: 12.8px;
 }
 
-/* "Создать запись" */
-.on-page {
+/* Стили для контейнера поста */
+.post-item {
+    border-radius: 4px;
+    border: 3px solid #eee;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+/* Медиа-запрос для post-item на мобильных */
+@media (max-width: 767px) {
+    .post-item {
+        padding: 15px; /* Уменьшаем padding */
+        margin-bottom: 15px; /* Уменьшаем margin */
+    }
+}
+
+
+/* --- Стили для кнопок редактирования и удаления поста --- */
+.post-actions .btn {
+    border-radius: 0px !important; /* Убираем скругление углов */
+    /* Добавляем transition для анимации */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+}
+
+/* Анимация кнопок редактирования/удаления при наведении */
+.post-actions .btn-secondary:hover {
+    background-color: #545b62; /* Темнее серый */
+    border-color: #4e555b;
+    color: #fff;
+}
+.post-actions .btn-danger:hover {
+    background-color: #c82333; /* Темнее красный */
+    border-color: #bd2130;
+    color: #fff;
+}
+
+/* Анимация кнопок редактирования/удаления при нажатии */
+.post-actions .btn:active {
+    transform: translateY(1px); /* Эффект нажатия */
+}
+
+/* Медиа-запрос для кнопок редактирования/удаления на мобильных */
+@media (max-width: 575px) { /* Для экранов меньше 576px */
+    .post-actions {
+        display: flex; /* Используем flexbox */
+        flex-direction: column; /* Располагаем кнопки вертикально */
+        gap: 10px; /* Добавляем отступ между кнопками */
+        margin-top: 15px; /* Уменьшаем отступ сверху */
+    }
+    .post-actions .btn {
+        width: 100%; /* Кнопки занимают всю ширину */
+        text-align: center; /* Выравниваем текст по центру */
+    }
+    .post-actions form {
+        display: block !important; /* Убедимся, что форма становится блочной */
+    }
+}
+
+
+/* --- Стили для страницы СОЗДАТЬ ЗАПИСЬ (.page-create) --- */
+.page-create h1{
+    padding-top: 0px;
+    margin-bottom: 16px;
+}
+
+/* --- Стили для страницы РЕДАКТИРОВАТЬ ЗАПИСЬ (.page-edit) --- */
+.page-edit h1{
+    padding-top: 0px;
+    margin-bottom: 16px;
+}
+
+/* Стили для форм на страницах create и edit */
+.page-create .form-control,
+.page-edit .form-control {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px; /* Добавляем скругление */
+    border: 3px solid #eee;
+}
+/* Медиа-запрос для форм на мобильных */
+@media (max-width: 767px) {
+    .page-create .form-control,
+    .page-edit .form-control {
+        padding: 15px; /* Уменьшаем padding */
+    }
+}
+
+/* Стили для меток форм */
+.form-label {
+    color: #fff !important; /* Убедимся, что цвет белый */
+}
+
+/* Стили для полей ввода и textarea */
+.form-control {
+    background-color: rgba(255, 255, 255, 0.1); /* Полупрозрачный фон */
+    border: 1px solid #ccc; /* Граница */
     color: #fff; /* Цвет текста */
-    background-color: #007bff;
-    border: 1px solid #007bff;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease; /* Плавный переход для анимации */
+}
+.form-control::placeholder { /* Стили для плейсхолдера */
+    color: rgba(255, 255, 255, 0.7);
+}
+.form-control:focus { /* Стили при фокусе */
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25); /* Свечение */
 }
 
-/* Анимация при наведении (hover) */
-.on-page:hover {
-    background-color: #0056b3; /* Темнее при наведении */
-    border-color: #004085; /* Темнее граница */
-    color: #fff; /* Цвет текста остается белым */
+/* Стили для кнопок форм */
+.page-create .btn-primary,
+.page-edit .btn-primary {
+    margin-right: 10px; /* Отступ справа от кнопки "Сохранить" */
 }
 
-/* Анимация при активном состоянии (нажатии) */
-.on-page:active {
-    background-color: #004085; /* Еще темнее при нажатии */
-    border-color: #002752; /* Еще темнее граница */
-    transform: translateY(1px); /* Сдвиг вниз на 1px для эффекта нажатия */
+/* Медиа-запрос для кнопок форм на мобильных */
+@media (max-width: 575px) { /* Для экранов меньше 576px */
+    .page-create form .btn,
+    .page-edit form .btn {
+        width: 100%; /* Кнопки занимают всю ширину */
+        margin-bottom: 10px; /* Отступ снизу */
+        margin-right: 0; /* Убираем отступ справа */
+    }
 }
 
-.page-label .on-page{
-    color:#135BC0 ;
-    background-color: #cadaf1;
+
+/* Утилитарные классы Bootstrap - корректировка */
+/* Убираем !important, если возможно, чтобы не перебивать Bootstrap без необходимости */
+.mb-4 {
+    margin-bottom: 1.5rem !important; /* Стандартный mb-4 в Bootstrap */
+}
+.mt-5 {
+    margin-top: 3rem !important; /* Стандартный mt-5 в Bootstrap */
+}
+.mt-4 {
+    margin-top: 1.5rem !important; /* Стандартный mt-4 в Bootstrap */
+}
+.mt-3 {
+     margin-top: 1rem !important; /* Стандартный mt-3 в Bootstrap */
+}
+.mb-3 {
+     margin-bottom: 1rem !important; /* Стандартный mb-3 в Bootstrap */
+}
+.me-2 {
+     margin-right: 0.5rem !important; /* Стандартный me-2 в Bootstrap */
+}
+.ms-3 {
+     margin-left: 1rem !important; /* Стандартный ms-3 в Bootstrap */
 }
 
-/* Анимация при наведении (hover) */
-.page-label .on-page:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Темнее при наведении */
-    color: #135BC0;
+
+/* Стили для отображения текущего изображения на странице редактирования */
+.page-edit .form-text {
+    display: block; /* Делаем блочным */
+    margin-top: 10px; /* Отступ сверху */
+}
+.page-edit img[alt="Текущее изображение"] {
+    max-width: 200px;
+    height: auto;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: block; /* Делаем блочным для выравнивания */
+}
+.page-edit .form-check {
+    margin-top: 10px;
 }
 
-.review {
-    padding-top: 24px;
-    /* Добавляем Flexbox для горизонтального расположения ссылок */
-    display: flex;
-    /* Устанавливаем расстояние между Flex-элементами (ссылками) */
-    gap: 24px;
-
-    align-items: center; /* Выравнивание по вертикали */
-
-    /* Опционально: чтобы ссылки переносились на новую строку на узких экранах */
-    flex-wrap: wrap;
-}

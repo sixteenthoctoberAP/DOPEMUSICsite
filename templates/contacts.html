@@ -7,7 +7,7 @@
 
 {% block content %}
 
-    <div class="contacts navbar container">
+    <div class="contacts navbar container"> {# Возможно, стоит убрать класс container, если base.html уже предоставляет его для main #}
        <nav>
             <ul>
                 <li><a href="#contacts">Контакты</a></li> {# Якорь на раздел внутри этой же страницы #}
@@ -16,7 +16,7 @@
         </nav>
     </div>
 
-    <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
+    <div class="container">
         <h1 id="contacts">Контакты</h1>
 
         <div class="contacts-info">
@@ -49,19 +49,13 @@
 
         <h1 id="how-to-get">Как добраться?</h1>
         <div class="map-container">
-            {# Код виджета карты от Яндекс. Не требует url_for, т.к. это внешний ресурс #}
-            <div style="position:relative;overflow:hidden;">
-                <a href="https://yandex.ru/maps/org/dope_music/183475169094/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Dope Music</a>
-                <a href="https://yandex.ru/maps/50/perm/category/recording_studio/184105594/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:14px;">Студия звукозаписи в Перми</a>
-                <iframe
-                    src="https://yandex.ru/map-widget/v1/?ll=56.239675%2C58.013182&mode=search&oid=183475169094&ol=biz&z=16.69&theme=dark"
-                    width="100%"
-                    height="400"
-                    frameborder="1"
-                    allowfullscreen="true"
-                    style="position:relative;">
-                </iframe>
-            </div>
+            <iframe
+                src="https://yandex.ru/map-widget/v1/?ll=56.239675%2C58.013182&mode=search&oid=183475169094&ol=biz&z=16.69&theme=dark"
+                width="100%"
+                allowfullscreen="true"
+                style="position:relative;" {# Оставляем position:relative здесь, если нужно для позиционирования элементов внутри iframe, хотя обычно не требуется для виджета #}
+            ></iframe>
+             <a href="https://yandex.ru/maps/org/dope_music/183475169094/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Dope Music</a>
         </div>
     </div>
 {% endblock %}
