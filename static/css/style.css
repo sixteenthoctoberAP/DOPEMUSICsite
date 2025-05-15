@@ -195,6 +195,12 @@ footer {
     height: 100%;
     object-fit: contain;
 }
+/* Стили для div.navbar.container (вторая навигация) */
+/* Убираем padding, который добавляет класс .container */
+.navbar.container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
 
 /* Медиа-запрос для футера на мобильных */
 @media (max-width: 767px) {
@@ -392,6 +398,7 @@ h1{
     padding-top: 32px;
     margin: 0;
     line-height: 1.2;
+    width: 100%;
 }
 
 h2{
@@ -595,7 +602,7 @@ font-weight: 400;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Позволяем элементам переноситься на новую строку */
+    /*flex-wrap: wrap; !* Позволяем элементам переноситься на новую строку *!*/
 }
 
 .page-label .title-container h1 {
@@ -653,9 +660,9 @@ font-weight: 400;
 
 /* --- Стили для страницы О НАС (.page-about) --- */
 .page-about .navbar:not(header.navbar) nav ul { /* Уточняем селектор */
-    justify-content: center; /* Центрируем ссылки */
+    /*justify-content: center; !* Центрируем ссылки *!*/
     gap: 40px; /* Отступ между ссылками */
-    padding: 0 10px; /* Добавляем padding для мобильных */
+    padding: 0 4px; /* Добавляем padding для мобильных */
 }
 
 /* Медиа-запрос для второй навигации на странице О нас на мобильных */
@@ -678,31 +685,40 @@ font-weight: 400;
 
 /* Стили для секции Команда */
 .team {
+    padding-top: 32px;
     display: flex;
     flex-wrap: wrap; /* Позволяем элементам переноситься на новую строку */
-    gap: 20px; /* Добавляем отступ между элементами */
+    gap: 55px; /* Добавляем отступ между элементами */
     justify-content: center; /* Центрируем элементы */
 }
 
 /* Стили для каждого блока члена команды */
 .team-info{
     width: 100%; /* По умолчанию занимает всю ширину родителя */
-    max-width: 347px; /* Ограничиваем максимальную ширину на больших экранах */
-    text-align: center; /* Центрируем текст под изображением */
+    max-width: 347px; /* Ограничиваем максимальную ширину на больших экранах *!*/
+    text-align: center; /* Центрируем текст под изображением *!*/
+
 }
 
-/* Стили для изображений команды */
-.team-info img{
-    width: 100%; /* Изображение занимает всю ширину родительского team-info */
-    height: auto; /* Высота автоматически, сохраняем пропорции */
-    max-width: 347px; /* Ограничиваем максимальную ширину на больших экранах */
+.team img{
+        width: 347px;
+    height: 432px;
     object-fit: cover;
     border: 3px solid #eee;
-    border-radius: 4px;
-    display: block; /* Делаем блочным для центрирования */
-    margin-left: auto; /* Центрируем изображение */
-    margin-right: auto; /* Центрируем изображение */
 }
+
+/*!* Стили для изображений команды *!*/
+/*.team-info img{*/
+/*    width: 100%; !* Изображение занимает всю ширину родительского team-info *!*/
+/*    height: auto; !* Высота автоматически, сохраняем пропорции *!*/
+/*    max-width: 347px; !* Ограничиваем максимальную ширину на больших экранах *!*/
+/*    object-fit: cover;*/
+/*    border: 3px solid #eee;*/
+/*    border-radius: 4px;*/
+/*    display: block; !* Делаем блочным для центрирования *!*/
+/*    margin-left: auto; !* Центрируем изображение *!*/
+/*    margin-right: auto; !* Центрируем изображение *!*/
+/*}*/
 
 /* Медиа-запрос для изображений команды на мобильных */
 @media (max-width: 767px) {
@@ -726,6 +742,7 @@ font-weight: 400;
     opacity: 0.8;
     padding-top: 8px;
     margin: 0;
+    text-align: justify;
 }
 .team-info h5{
     font-size: 18px;
@@ -778,9 +795,9 @@ font-weight: 400;
 
 /* Стили для секции Отзывы */
 .reviews h1{
-    padding-top: 80px;
+    padding-top: 30px;
     width: 100%; /* Заголовок занимает всю ширину для центрирования */
-    text-align: center; /* Центрируем заголовок */
+
 }
 
 /* Стили для блока отзывов на странице О нас */
@@ -810,7 +827,7 @@ font-weight: 400;
 .page-services .navbar:not(header.navbar) nav ul { /* Уточняем селектор */
     justify-content: space-between; /* Растягиваем элементы */
     gap: 10px; /* Добавляем небольшой gap */
-    padding: 0 10px; /* Добавляем padding для мобильных */
+    padding: 0 4px; /* Добавляем padding для мобильных */
 }
 
 /* Медиа-запрос для второй навигации на странице Услуги на мобильных */
@@ -961,8 +978,7 @@ font-weight: 400;
     padding: 16px 24px;
     text-decoration: none;
     margin-top: 40px;
-    /* Добавляем transition для анимации */
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, transform 0.5s ease;
 }
 /* Анимация mainknopka при наведении */
 .mainknopka:hover {
@@ -1019,8 +1035,6 @@ font-weight: 400;
     .page-index .carousel {
         height: auto; /* Автоматическая высота */
         float: none; /* Убираем float */
-        margin: 20px auto !important; /* Центрируем и добавляем отступ */
-        width: 90%; /* Используем проценты для адаптивности */
         max-width: 400px; /* Ограничиваем максимальную ширину */
     }
 
@@ -1076,7 +1090,8 @@ font-weight: 400;
         padding: 8px 15px;
         float: none; /* Убираем float */
         display: block; /* Делаем блочным для центрирования */
-        margin: 20px auto 0; /* Центрируем и добавляем отступ */
+        /*margin: 20px auto 0; !* Центрируем и добавляем отступ *!*/
+        margin-bottom: 16px;
         text-align: center; /* Выравниваем текст по центру */
     }
      .page-media .title-container {
@@ -1101,7 +1116,6 @@ font-weight: 400;
     border: 3px solid #ffffff;
     border-radius: 4px;
     height: auto;
-    width: 100%;
 }
 /* Медиа-запрос для post-image на мобильных */
 @media (max-width: 767px) {
@@ -1253,7 +1267,7 @@ font-weight: 400;
     margin-bottom: 1.5rem !important; /* Стандартный mb-4 в Bootstrap */
 }
 .mt-5 {
-    margin-top: 3rem !important; /* Стандартный mt-5 в Bootstrap */
+    margin-top: 24px !important; /* Стандартный mt-5 в Bootstrap */
 }
 .mt-4 {
     margin-top: 1.5rem !important; /* Стандартный mt-4 в Bootstrap */

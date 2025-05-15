@@ -6,7 +6,6 @@
 {% block body_class %}page-media{% endblock %}
 
 {% block content %}
-    <div class="container">
         <div class="title-container">
              {# Ссылка "Создать запись" видна ТОЛЬКО авторизованным пользователям #}
             {% if current_user.is_authenticated %}
@@ -60,5 +59,4 @@
                 <p style="color: #fff; opacity: 0.8;">Пока нет опубликованных записей.</p>
             {% endif %}
         </div>
-    </div>
 {% endblock %}

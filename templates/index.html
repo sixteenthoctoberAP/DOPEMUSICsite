@@ -7,14 +7,9 @@
 
 {% block content %}
 
-    <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}
-        <div id="equipmentCarousel" class="carousel slide mt-4" data-bs-ride="carousel" style="height: 500px; margin: 0 auto !important; float: right;">
-             {# Внимание: inline стили для ширины/высоты карусели и float/margin лучше перенести в style.css для класса, например, .main-carousel #}
-             {# Пример: <div id="equipmentCarousel" class="carousel slide mt-4 main-carousel" data-bs-ride="carousel"> #}
-
-            <div class="carousel-inner" style="width: 500px; height: 500px; overflow: hidden; border-radius: 4px">
-                {# Внимание: inline стили для ширины/высоты carousel-inner лучше перенести в style.css #}
-
+<!--    <div class="container"> {# Этот контейнер был внутри main в вашем старом коде #}-->
+        <div id="equipmentCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+            <div class="carousel-inner">
                 <div class="carousel-item active">
                     {# Путь к изображению карусели из static/img/. Стили object-fit: cover; можно оставить или перенести в CSS #}
                     <img src="{{ url_for('static', filename='img/8.png') }}" class="d-block w-100 h-100" style="object-fit: cover;" alt="studio">
@@ -42,5 +37,5 @@
         <h1>Dope Music</h1>
         <h2>Первая многофункциональная <br> студия звукозаписи в Перми  </h2>
         <a class="mainknopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
-    </div>
+<!--    </div>-->
 {% endblock %}
