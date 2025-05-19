@@ -58,7 +58,7 @@ def allowed_file(filename):
 
 # --- Модель пользователя ---
 
-# Определяет структуру таблицы 'user' в базе данных. Наследуется от UserMixin для интеграции с Flask-Login.
+# Определяет структуру таблицы 'user' в базе данных. Наследуется от UserMixin для интеграции с Flask-Login
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True) # Первичный ключ, автоинкремент
     username = db.Column(db.String(100), unique=True, nullable=False) # Имя пользователя, уникальное, обязательное
