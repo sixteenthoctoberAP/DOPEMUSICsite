@@ -1155,7 +1155,7 @@ font-weight: 400;
 
 /* --- Стили для кнопок редактирования и удаления поста --- */
 .post-actions .btn {
-    border-radius: 0px !important; /* Убираем скругление углов */
+    border-radius: 4px !important; /* Убираем скругление углов */
     /* Добавляем transition для анимации */
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
 }

@@ -1132,6 +1132,16 @@ font-weight: 400;
 
 /* MOBILE */
 
+from app import app, db, User
+from werkzeug.security import generate_password_hash
+with app.app_context():
+    new_user = User(username='xxx')
+    new_user.set_password('xxx')
+    db.session.add(new_user)
+    db.session.commit()
+    print(f"Пользователь '{new_user.username}' успешно создан!")
+
+Пользователь 'Griga' успешно создан!
 
 
 

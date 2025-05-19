@@ -86,8 +86,17 @@ class Post(db.Model):
     image_filename = db.Column(db.String(100), nullable=True)
     # Поле для даты и времени создания поста. Устанавливается автоматически при создании записи. Храним в UTC.
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    # Опционально: user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # Опционально: author = db.relationship('User', backref=db.backref('posts', lazy=True))
+
+    # --- ДОБАВЛЕНО: Поле user_id как внешний ключ для связи с таблицей User ---
+    # 'user.id' указывает на поле 'id' в таблице 'user'
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    # --- ДОБАВЛЕНО: Отношение к модели User ---
+    # 'User' - имя связанной модели
+    # backref='posts' создает обратную ссылку в модели User,
+    # позволяя получить все посты пользователя через user.posts
+    # lazy=True означает, что связанные посты будут загружены только при обращении к ним
+    author = db.relationship('User', backref=db.backref('posts', lazy=True))
 
 
     # Метод для удобного представления объекта поста (для отладки)
@@ -119,6 +128,7 @@ def format_datetime_timezone(value, timezone_name='UTC', format='%Y-%m-%d %H:%M'
         return ""
 
     utc_timezone = pytz.timezone('UTC')
+    # Убедимся, что время в UTC, если оно не имеет информации о часовом поясе
     if value.tzinfo is None:
         utc_dt = utc_timezone.localize(value)
     else:
@@ -145,7 +155,6 @@ def format_datetime_timezone(value, timezone_name='UTC', format='%Y-%m-%d %H:%M'
 # Маршрут для главной страницы
 @app.route('/index')
 @app.route('/')
-
 def index():
     return render_template('index.html')
 
@@ -168,7 +177,7 @@ def contacts():
 @app.route('/media')
 def media():
     # Получаем все посты из базы данных, сортируя их по дате создания в убывающем порядке (по UTC).
-    # Сортировка по UTC корректна, даже если отображаем в другом поясе.
+    # SQLAlchemy автоматически подгрузит связанного автора благодаря определенному отношению 'author'.
     all_posts = Post.query.order_by(Post.created_at.desc()).all()
     # Передаем список постов в шаблон media.html
     return render_template('media.html', posts=all_posts)
@@ -271,8 +280,14 @@ def create():
         # Создаем новый объект Post.
         # Поле created_at установится автоматически благодаря default=datetime.utcnow.
         # Поле image_filename будет либо уникальным именем файла, либо None.
-        post = Post(title=title, text=text, image_filename=image_filename)
-
+        # --- ИЗМЕНЕНО: Связываем пост с текущим авторизованным пользователем ---
+        post = Post(
+            title=title,
+            text=text,
+            image_filename=image_filename,
+            author=current_user # Присваиваем текущего пользователя как автора поста
+            # Или можно использовать user_id: user_id=current_user.id
+        )
 
 
         try:
@@ -294,7 +309,6 @@ def create():
             return render_template('create.html', title=title, text=text)
 
     # Обработка GET запроса (просто отображение страницы создания поста)
-    # --- ИСПРАВЛЕННЫЙ ОТСТУП ЭТОГО БЛОКА ---
     else:
         return render_template('create.html')
 
@@ -305,6 +319,11 @@ def create():
 def edit(post_id):
     # Ищем пост по ID. Если не найден, возвращаем ошибку 404.
     post = Post.query.get_or_404(post_id)
+
+    # --- ДОБАВЛЕНО: Проверка, является ли текущий пользователь автором поста ---
+    # Если текущий пользователь не является автором поста, возвращаем ошибку 403 (Запрещено).
+    if post.author != current_user:
+         abort(403) # Запрещено
 
     if request.method == 'POST':
         # Получаем обновленные данные из формы
@@ -370,13 +389,12 @@ def edit(post_id):
             return render_template('edit.html', post=post)
 
     # Обработка GET запроса (отображение формы редактирования)
-    # --- ИСПРАВЛЕННЫЙ ОТСТУП ЭТОГО БЛОКА ---
     else:
         # Передаем объект поста в шаблон edit.html для предзаполнения формы
         return render_template('edit.html', post=post)
 
 
-# --- НОВЫЙ МАРШРУТ ДЛЯ УДАЛЕНИЯ ПОСТА ---
+# --- МАРШРУТ ДЛЯ УДАЛЕНИЯ ПОСТА ---
 # Принимает ID поста в URL. Принимает только POST запросы для безопасности.
 @app.route('/delete/<int:post_id>', methods=['POST'])
 @login_required # Только авторизованные пользователи могут удалять
@@ -384,9 +402,10 @@ def delete(post_id):
     # Ищем пост по ID. Если не найден, возвращаем ошибку 404.
     post = Post.query.get_or_404(post_id)
 
-    # Опционально: Добавить проверку, является ли текущий пользователь автором поста
-    # if post.user_id != current_user.id:
-    #    abort(403) # Запрещено
+    # --- ДОБАВЛЕНО: Проверка, является ли текущий пользователь автором поста ---
+    # Если текущий пользователь не является автором поста, возвращаем ошибку 403 (Запрещено).
+    if post.author != current_user:
+         abort(403) # Запрещено
 
     try:
         # Удаляем связанное изображение с диска, если оно существует
@@ -425,14 +444,10 @@ def delete(post_id):
 if __name__ == '__main__':
     # !!! ВАЖНО: После добавления или изменения полей в моделях (User, Post и др.),
     # необходимо обновить структуру таблиц в базе данных.
-    # Если вы не используете Flask-Migrate, самый простой способ для этапа разработки -
+    # Поскольку вы не используете Flask-Migrate, самый простой способ для этапа разработки -
     # удалить существующий файл базы данных (dope_music.db)
-    # и заново выполнить db.create_all() в Python консоли из активированного виртуального окружения:
-    # from app import app, db
-    # with app.app_context():
-    #     db.create_all() # Создаст или обновит таблицы, включая новые поля
-    #     # Не забудьте при необходимости заново создать пользователя(ей) вручную
-    #     # после удаления старой базы данных!
+    # и заново выполнить db.create_all() в Python консоли из активированного виртуального окружения.
+    # См. инструкции ниже.
 
     # Запуск Flask-приложения в режиме отладки на порту 5001.
     # debug=True позволяет видеть подробные ошибки в браузере и автоматически перезагружать сервер при изменениях кода.
