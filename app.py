@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template, request, redirect, url_for, flash, abort # Импортируем abort
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,8 +8,7 @@ from werkzeug.utils import secure_filename
 import uuid
 from datetime import datetime
 import pytz
-# from config import Config  # <-- Эту строку нужно удалить, так как у вас нет config.py
-from flask_migrate import Migrate  # Импортируем Flask-Migrate
+from flask_migrate import Migrate
 
 # Создание экземпляра приложения Flask
 app = Flask(__name__)
