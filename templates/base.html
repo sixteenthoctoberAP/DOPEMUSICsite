@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {# Подключение Bootstrap CSS с CDN #}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {# Подключение вашего style.css из папки static/css/ #}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-     {# Подключение favicon из папки static/ #}
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-    {# Блок для дополнительных стилей, специфичных для конкретной страницы #}
-    {# Дочерние шаблоны могут переопределить этот блок и добавить свои CSS ссылки #}
+    {# --- Favicon: Добавленные/проверенные строки --- #}
+    {# Основной favicon для большинства браузеров (PNG рекомендуется для качества и прозрачности) #}
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}" sizes="16x16">
+    {# Фавикон для старых браузеров и обратной совместимости (ICO) #}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.png') }}">
+    {# Favicon для устройств Apple (iOS) #}
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/favicon.png') }}">
+    {# --- Конец Favicon --- #}
+
     {% block extra_css %}
     {% endblock %}
 
-    {# Блок для заголовка страницы. Каждая дочерняя страница может его переопределить. #}
     <title>{% block title %}Dope Music{% endblock %}</title>
 </head>
-{# Класс body может быть переопределен на дочерних страницах, если нужен специфичный стиль #}
 <body class="{% block body_class %}{% endblock %}">
     <div class="page">
 
@@ -27,17 +29,14 @@
         {# bg-transparent для прозрачного фона, navbar-dark для светлого текста на темном фоне #}
         {# container-fluid для полной ширины на всех брейкпоинтах, или container для фиксированной ширины #}
         <header class="navbar navbar-expand-lg bg-transparent navbar-dark">
-            <div class="container"> {# Используем ваш .container для центрирования и ширины #}
+            <div class="container">
 
                 {# Ссылка на главную страницу с использованием url_for #}
-                {# navbar-brand класс для логотипа #}
                 <a class="navbar-brand" href="{{ url_for('index') }}">
-                    {# --- Блок для ЛОГОТИПА --- #}
                     {% block logo %}
                         {# Логотип по умолчанию #}
                         <img src="{{ url_for('static', filename='img/Group 81.svg') }}" alt="logo" style="margin-left: -12px;">
                     {% endblock %}
-                    {# --- Конец блока ЛОГОТИПА --- #}
                 </a>
 
                 {# --- Кнопка-переключатель для мобильной навигации (Гамбургер-меню) --- #}
@@ -72,16 +71,11 @@
                         {# --- Конец условного отображения --- #}
                     </ul>
                 </div>
-                {# --- Конец сворачиваемого контейнера --- #}
-
             </div> {# Закрытие div.container #}
         </header>
-        {# --- Конец шапки сайта с Bootstrap Navbar --- #}
-
 
         {# Место для отображения flash сообщений (общая для всех страниц) #}
-        {# Этот блок должен быть вне header, чтобы сообщения были под шапкой #}
-        <div class="container mt-3"> {# Добавим небольшой отступ сверху #}
+        <div class="container mt-3"> {# mt-3 #}
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -95,19 +89,16 @@
             {% endwith %}
         </div>
 
-        {# --- Блок для основного содержимого страницы --- #}
-        {# Каждая дочерняя страница ДОЛЖНА определить этот блок #}
         <main class="container flex-grow-1">
             {% block content %}
-                {# Содержимое по умолчанию, если блок не переопределен (можно оставить пустым) #}
+
             {% endblock %}
         </main>
         {# --- Конец блока основного содержимого --- #}
 
-
-        {# Подвал сайта (общий для всех страниц) #}
+        {# Подвал сайта #}
         <footer class="container">
-            <h5>«Dope Music™ © 2025. All rights reserved.»</h5>
+            <h5>© 2025 Dope Music™. All rights reserved.</h5>
             <div class="footer-right">
                 <a class="knopka" href="https://t.me/dopemusic_perm" target="_blank">Забронировать время</a>
                 <div class="footer-links">
@@ -123,8 +114,7 @@
                 </div>
             </div>
         </footer>
-
-    </div> {# Закрытие div.page #}
+    </div>
 
     {# Подключение Bootstrap JS с CDN - ДОЛЖНО БЫТЬ В КОНЦЕ BODY #}
     {# Bootstrap JS включает функционал сворачивания (collapse) и карусели #}
