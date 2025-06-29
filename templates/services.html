@@ -70,8 +70,8 @@
                         </div>
                     </div>
                     {# Пути к аудиофайлам из static/audio/ #}
-                    <audio id="track1-before" src="{{ url_for('static', filename='audio/Sheck Wes - ILMB.mp3') }}"></audio>
-                    <audio id="track1-after" src="{{ url_for('static', filename='audio/МЭЙБИ БЭЙБИ - Такая любовь.mp3') }}"></audio>
+                    <audio id="track1-before" src="{{ url_for('static', filename='audio/gls2.wav') }}"></audio>
+                    <audio id="track1-after" src="{{ url_for('static', filename='audio/satuurnn - gls2.wav') }}"></audio>
                 </div>
 
                 <div class="next-track">
@@ -109,12 +109,53 @@
                         </div>
 
                         {# Пути к аудиофайлам для Трека 2 из static/audio/ #}
-                        <audio id="track2-before" src="{{ url_for('static', filename='audio/Lil Tecca - Dark Thoughts.mp3') }}"></audio>
-                        <audio id="track2-after" src="{{ url_for('static', filename='audio/Платина - Санта Клаус.mp3') }}"></audio>
+                        <audio id="track2-before" src="{{ url_for('static', filename='audio/пару демо готово2.wav') }}"></audio>
+                        <audio id="track2-after" src="{{ url_for('static', filename='audio/НИТТИ - Пару сведос 3.wav') }}"></audio>
                     </div>
-                </div>
-            </div>
 
+                    {# Этот блок теперь соответствует Треку 3, как указано в комментарии #}
+<div class="next-track">
+    <div class="track-row row mb-4 align-items-center">
+        <div class="col-md-6 d-flex align-items-center">
+            <button class="play-btn me-3" onclick="togglePlay(3, 'before')"> {# ИЗМЕНЕНО: togglePlay(3, ...) #}
+                <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M8 5v14l11-7z"/>
+                </svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
+                    <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+            </button>
+            <span>До</span>
+            <div class="time ms-3">0:00 / 0:00</div>
+            <div class="progress-container ms-3" style="flex: 1; display: none;">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="col-md-6 d-flex align-items-center">
+            <button class="play-btn me-3" onclick="togglePlay(3, 'after')"> {# ИЗМЕНЕНО: togglePlay(3, ...) #}
+                <svg class="play-icon" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="currentColor" d="M8 5v14l11-7z"/>
+                </svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" width="24" height="24" style="display: none;">
+                    <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+            </button>
+            <span>После</span>
+            <div class="time ms-3">0:00 / 0:00</div>
+            <div class="progress-container ms-3" style="flex: 1; display: none;">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        {# Пути к аудиофайлам для Трека 3 из static/audio/ #}
+        <audio id="track3-before" src="{{ url_for('static', filename='audio/Дождик.mp3') }}"></audio> {# ИЗМЕНЕНО: id="track3-before" #}
+        <audio id="track3-after" src="{{ url_for('static', filename='audio/Дождик сведос.mp3') }}"></audio> {# ИЗМЕНЕНО: id="track3-after" #}
+    </div>
+</div>
+
+            </div>
+        </div>
             <h2 id="price">Стоимость</h2>
             {# Путь к изображению прайс-листа из static/img/ #}
             <img src="{{ url_for('static', filename='img/pricelist.jpg') }}" alt="Стоимость" class="pricelist">
